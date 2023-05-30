@@ -68,7 +68,7 @@ class ProductController extends Controller
     {
         if(Product::where('id',$id)->exists()){
             $product = Product::find($id);
-            $product->product = $request->product_ref;
+            $product->product_ref = $request->product_ref;
             $product->customer_ref = $request->customer_ref;
             $product->name = $request->name;
             $product->zone = $request->zone;
