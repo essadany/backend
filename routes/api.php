@@ -5,7 +5,9 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-
+use App\Http\Resources\CustomerRessource;
+use App\Models\Customer;
+use App\Http\Controllers\CustomerController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +18,7 @@ use App\Http\Controllers\ProductController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+//  --------------------------------------------Product--------------------------------------------------------------------
 Route::get('/products',function(){
     return ProductRessource::collection(Product::all());
 });
@@ -29,6 +32,22 @@ Route::post('/product',[ProductController::class, 'store']);
 Route::put('/product/{id}',[ProductController::class, 'update']);
 
 Route::delete('/product/{id}',[ProductController::class, 'destroy']);
+
+//  --------------------------------------------Customer--------------------------------------------------------------------
+Route::get('/customers',function(){
+    return CustomerRessource::collection(Customer::all());
+});
+
+Route::get('customer/{id}',function($id){
+    return new CustomerRessource(Customer::findOrFail($id));
+});
+
+Route::post('/customer',[CustomerController::class, 'store']);
+
+Route::put('/customer/{id}',[CustomerController::class, 'update']);
+
+Route::delete('/customer/{id}',[CustomerController::class, 'destroy']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
