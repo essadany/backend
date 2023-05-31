@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('id');
             $table->string('customer_ref')->unique();
             $table->string('name');
-            $table->string('category');
-            $table->string('info');
+            $table->enum('category',["Intern", "Extern"]);
+            $table->string('info')->nullable();
             $table->timestamps();
         });
     }

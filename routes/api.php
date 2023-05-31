@@ -8,6 +8,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Resources\CustomerRessource;
 use App\Models\Customer;
 use App\Http\Controllers\CustomerController;
+use App\Http\Resources\ClaimRessource;
+use App\Models\Claim;
+use App\Http\Controllers\ClaimController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,7 +50,20 @@ Route::post('/customer',[CustomerController::class, 'store']);
 Route::put('/customer/{id}',[CustomerController::class, 'update']);
 
 Route::delete('/customer/{id}',[CustomerController::class, 'destroy']);
+//  --------------------------------------------Claim--------------------------------------------------------------------
+Route::get('/claims',function(){
+    return ClaimRessource::collection(Claim::all());
+});
 
+Route::get('claim/{id}',function($id){
+    return new ClaimRessource(Claim::findOrFail($id));
+});
+
+Route::post('/claim',[ClaimController::class, 'store']);
+
+Route::put('/claim/{id}',[ClaimController::class, 'update']);
+
+Route::delete('/claim/{id}',[ClaimController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
