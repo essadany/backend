@@ -20,16 +20,22 @@ return new class extends Migration
             $table->date('prod_date');
             $table->string('object');
             $table->date('opening_date');
+            $table->date('done_date')->nullable();
             $table->string('final_cusomer')->nullable();
             $table->string('claim_details');
             $table->string('def_mode');
             $table->integer('nbr_claimed_parts');
             $table->date('returned_parts')->nullable();
+            $table->enum('status',['not started','on going', 'done'])->default('not started');
             $table->timestamps();
+
+
+            $table->foreign('product_ref')->references('product_ref')->on('products')
+            ->cascadeOnUpdate()
+            ->restrictOnDelete();	
+
         });
-        Schema::table('claims', function (Blueprint $table) {
-            $table->foreign('product_ref')->references('product_ref')->on('products');
-        });
+        
     }
 
     /**

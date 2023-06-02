@@ -1,17 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Product;
+
 use Illuminate\Http\Request;
+use App\Models\Action;
 use Illuminate\Support\Facades\Validator;
-class ProductController extends Controller
+class ActionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Product::all();
+        //
     }
 
     /**
@@ -29,28 +30,32 @@ class ProductController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'product_ref'=>'required',
-            'customer_ref'=>'required',
-            'name',
-            'zone' => 'required',
-            'uap'
+            'user_id'=>'required',
+            'action'=>'required', 
+            'type'=>'required', 
+            'pilot'=>'required', 
+            'planned_date'=>'required', 
+            'start_date'=>'', 
+            'status'=>'required', 
+            'done_date'=>''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
-    $product = Product::create($input);
+    $Action = Action::create($input);
     return response()->json([ 
         'success'=>true,
-        'message'=> 'Product Record Created Successfully',
-        'product'=>$product
+        'message'=> 'Action Record Created Successfully',
+        'Action'=>$Action
     ]);
     }
+
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        return Product::find($id);
+        return Action::find($id);
     }
 
     /**
@@ -64,18 +69,21 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
-        if(Product::where('id',$id)->exists()){
-            $product = Product::find($id);
-            $product->product_ref = $request->product_ref;
-            $product->customer_ref = $request->customer_ref;
-            $product->name = $request->name;
-            $product->zone = $request->zone;
-            $product->uap = $request->uap;
-            $product->save();
+        if(Action::where('id',$id)->exists()){
+            $Action = Action::find($id);
+            $Action->user_id = $request->user_id;
+            $Action->action = $request->action;
+            $Action->type = $request->type;
+            $Action->pilot = $request->pilot;
+            $Action->planned_date = $request->planned_date;
+            $Action->start_date = $request->start_date;
+            $Action->status = $request->status;
+            $Action->done_date = $request->done_date;
+            $Action->save();
             return response()->json([
-                'message'=>'Product Record Updated Successfully'
+                'message'=>'Action Record Updated Successfully'
             ],);
         }
     }
@@ -85,15 +93,15 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Product::where("id",$id)->exists()){
-            $product = Product::find($id);
-            $product->delete();
+        if(Action::where("id",$id)->exists()){
+            $Action = Action::find($id);
+            $Action->delete();
             return response()->json([
-                'message' => 'Product Record Deleted Successfully'
+                'message' => 'Action Record Deleted Successfully'
             ], 200);
         }else{
             return response()->json([
-                'message' => 'Product Record Not Found'
+                'message' => 'Action Record Not Found'
             ],404);
         }
     }

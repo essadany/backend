@@ -90,7 +90,7 @@ class ClaimController extends Controller
             $Claim->save();
             return response()->json([
                 'message'=>'Claim Record Updated Successfully'
-            ],404);
+            ],);
         }
     }
 

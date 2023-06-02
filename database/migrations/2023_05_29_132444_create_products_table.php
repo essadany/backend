@@ -16,13 +16,16 @@ return new class extends Migration
             $table->string("product_ref")->unique();
             $table->string("customer_ref");
             $table->string("name");
-            $table->enum("zone",['Module', 'Bobine','Faiscaux','Clapet','Gicleur']);
+            $table->enum("zone",['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne'])->default('Module');
             $table->string("uap");
             $table->timestamps();
+
+            $table->foreign('customer_ref')->references('customer_ref')->on('customers')
+            ->cascadeOnUpdate()
+            ->restrictOnDelete();	
+          
         });
-        Schema::table('products', function (Blueprint $table) {
-            $table->foreign('customer_ref')->references('customer_ref')->on('customers');
-        });
+        
     }
 
     /**

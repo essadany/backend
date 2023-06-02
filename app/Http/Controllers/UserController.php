@@ -1,17 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-class ProductController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Product::all();
+        return User::all();
     }
 
     /**
@@ -29,20 +29,21 @@ class ProductController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'product_ref'=>'required',
-            'customer_ref'=>'required',
-            'name',
-            'zone' => 'required',
-            'uap'
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'phone' => '',
+            'function' => 'required',
+            'role' => 'required'
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
-    $product = Product::create($input);
+    $User = User::create($input);
     return response()->json([ 
         'success'=>true,
-        'message'=> 'Product Record Created Successfully',
-        'product'=>$product
+        'message'=> 'User Record Created Successfully',
+        'User'=>$User
     ]);
     }
     /**
@@ -50,7 +51,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        return Product::find($id);
+        return User::find($id);
     }
 
     /**
@@ -66,16 +67,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Product::where('id',$id)->exists()){
-            $product = Product::find($id);
-            $product->product_ref = $request->product_ref;
-            $product->customer_ref = $request->customer_ref;
-            $product->name = $request->name;
-            $product->zone = $request->zone;
-            $product->uap = $request->uap;
-            $product->save();
+        if(User::where('id',$id)->exists()){
+            $User = User::find($id);
+            $User->name = $request->name;
+            $User->email = $request->email;
+            $User->password = $request->password;
+            $User->phone = $request->phone;
+            $User->function = $request->function;
+            $User->role = $request->role;
+            $User->email = $request->email;
+            $User->email = $request->email;
+            $User->save();
             return response()->json([
-                'message'=>'Product Record Updated Successfully'
+                'message'=>'User Record Updated Successfully'
             ],);
         }
     }
@@ -85,15 +89,15 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Product::where("id",$id)->exists()){
-            $product = Product::find($id);
-            $product->delete();
+        if(User::where("id",$id)->exists()){
+            $User = User::find($id);
+            $User->delete();
             return response()->json([
-                'message' => 'Product Record Deleted Successfully'
+                'message' => 'User Record Deleted Successfully'
             ], 200);
         }else{
             return response()->json([
-                'message' => 'Product Record Not Found'
+                'message' => 'User Record Not Found'
             ],404);
         }
     }

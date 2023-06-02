@@ -11,6 +11,16 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Resources\ClaimRessource;
 use App\Models\Claim;
 use App\Http\Controllers\ClaimController;
+use App\Models\User;
+use App\Http\Resources\UserRessource;
+use App\Http\Controllers\UserController;
+use App\Models\Action;
+use App\Http\Resources\ActionRessource;
+use App\Http\Controllers\ActionController;
+use App\Models\ActionUser;
+use App\Http\Resources\ActionUserRessource;
+use App\Models\Team;
+use App\Http\Resources\TeamRessource;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -64,6 +74,56 @@ Route::post('/claim',[ClaimController::class, 'store']);
 Route::put('/claim/{id}',[ClaimController::class, 'update']);
 
 Route::delete('/claim/{id}',[ClaimController::class, 'destroy']);
+
+
+//  --------------------------------------------Users--------------------------------------------------------------------
+Route::get('/users',function(){
+    return UserRessource::collection(User::all());
+});
+
+Route::get('user/{id}',function($id){
+    return new UserRessource(User::findOrFail($id));
+});
+Route::post('/user',[UserController::class, 'store']);
+
+Route::put('/user/{id}',[UserController::class, 'update']);
+
+Route::delete('/user/{id}',[UserController::class, 'destroy']);
+//  --------------------------------------------Actions--------------------------------------------------------------------
+Route::get('/actions',function(){
+    return ActionRessource::collection(Action::all());
+});
+
+Route::get('action/{id}',function($id){
+    return new ActionRessource(Action::findOrFail($id));
+});
+Route::post('/action',[ActionController::class, 'store']);
+
+Route::put('/action/{id}',[ActionController::class, 'update']);
+
+Route::delete('/action/{id}',[ActionController::class, 'destroy']);
+//--------------------------------------------Actions--------------------------------------------------------------------
+Route::get('/action_users',function(){
+    return ActionUserRessource::collection(ActionUser::all());
+});
+
+Route::get('action_users/{id}',function($id){
+    return new ActionUserRessource(ActionUser::findOrFail($id));
+});
+//--------------------------------------------Team--------------------------------------------------------------------
+Route::get('/teams',function(){
+    return TeamRessource::collection(ActionUser::all());
+});
+
+Route::get('team/{id}',function($id){
+    return new TeamRessource(Team::findOrFail($id));
+});
+//--------------------------------------------Team--------------------------------------------------------------------
+
+
+
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

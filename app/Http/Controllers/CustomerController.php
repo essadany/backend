@@ -76,7 +76,7 @@ class customerController extends Controller
             $customer->save();
             return response()->json([
                 'message'=>'customer Record Updated Successfully'
-            ],404);
+            ],);
         }
     }
 

@@ -10,7 +10,10 @@ class Product extends Model
     protected $fillable = ['product_ref','customer_ref','name','zone','uap'];
     protected $table = 'products';
     protected $enum = [
-        'zone' => ['Module', 'Bobine','Faiscaux','Clapet','Gicleur']
+        'zone' => ['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']
+    ];
+    protected $attributes = [
+        'zone'=>'Module'
     ];
     use HasFactory;
 }
