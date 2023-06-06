@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('actions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_id');
+            $table->integer('user_id')->unsigned();
             $table->string('action');
             $table->enum('type',['containment','potential','implemented','preventive'])->default('containment');
             $table->string('pilot');
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')
             ->cascadeOnUpdate()
             ->restrictOnDelete();	
+           
         });
     }
 

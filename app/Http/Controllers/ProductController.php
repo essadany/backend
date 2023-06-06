@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 class ProductController extends Controller
 {
     /**
@@ -31,9 +32,10 @@ class ProductController extends Controller
         $validator = Validator::make($input,[
             'product_ref'=>'required',
             'customer_ref'=>'required',
-            'name',
+            'customer_id'=>'required',
+            'name'=>'',
             'zone' => 'required',
-            'uap'
+            'uap'=>''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -69,6 +71,7 @@ class ProductController extends Controller
         if(Product::where('id',$id)->exists()){
             $product = Product::find($id);
             $product->product_ref = $request->product_ref;
+            $product->customer_id = $request->customer_id;
             $product->customer_ref = $request->customer_ref;
             $product->name = $request->name;
             $product->zone = $request->zone;
@@ -95,6 +98,30 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Product Record Not Found'
             ],404);
+        }
+    }
+    //get Products By Customer Name
+    public function getProductsByCustomerName($customerName)
+    {
+        // Make an HTTP request to fetch the customer record from the customers API
+        $response = Http::get('/customers', [
+            'name' => $customerName,
+        ]);
+
+        if ($response->successful()) {
+            $customer = $response->json();
+
+            // Extract the customer ID from the customer record
+            $customerId = $customer['id'];
+
+            // Fetch the products associated with the customer ID from your products database
+            $products = Product::where('customer_id', $customerId)->get();
+
+            // Return the list of products
+            return $products;
+        } else {
+            // Handle the case where the request to the customers API failed
+            return null;
         }
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Meeting extends Model
 {
     use HasFactory;
-    protected $fillable = ['type','date','comment'];
+    protected $fillable = ['type',
+                            'date',
+                            'comment'];
     protected $table = 'meetings';
 }

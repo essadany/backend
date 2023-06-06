@@ -18,4 +18,5 @@ class Action extends Model
         'type' => 'containment',
         'status' => 'not started'
     ];
+    protected $table = 'actions';
 }

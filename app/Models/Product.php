@@ -7,15 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['product_ref','customer_ref','name','zone','uap'];
+    use HasFactory;
+    protected $fillable = ['product_ref','customer_id','customer_ref','name','zone','uap'];
     protected $table = 'products';
     protected $enum = [
         'zone' => ['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']
     ];
-    protected $attributes = [
-        'zone'=>'Module'
-    ];
-    use HasFactory;
+    
+    
 }
 
 

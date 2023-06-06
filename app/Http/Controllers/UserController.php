@@ -4,8 +4,92 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\SessionGuard;
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login','store']]);
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        //$guard = Auth::guard();
+       // $expiresIn = $guard->factory()->getTTL() * 60;
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+           // 'expires_in' => $expiresIn,
+            'user' => auth()->user()
+        ]);
+    }
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request)
+    {
+        $credentials = request(['email', 'password']);
+        $token = auth()->attempt($credentials);
+
+        if (!$token) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    
+
+
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
+    }
+
+    
+
+
+
+
     /**
      * Display a listing of the resource.
      */
@@ -33,7 +117,7 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
             'phone' => '',
-            'function' => 'required',
+            'fonction' => 'required',
             'role' => 'required'
         ]);
         if($validator->fails()){
@@ -73,7 +157,7 @@ class UserController extends Controller
             $User->email = $request->email;
             $User->password = $request->password;
             $User->phone = $request->phone;
-            $User->function = $request->function;
+            $User->fonction = $request->fonction;
             $User->role = $request->role;
             $User->email = $request->email;
             $User->email = $request->email;

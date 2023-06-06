@@ -18,7 +18,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [ 'name', 'email', 'password', 'phone', 'function', 'role'];
+    protected $fillable = [ 'name', 'email', 'password', 'phone', 'fonction', 'role'];
     protected $enum = [
         'role'=>['admin','user','leader']
     ];

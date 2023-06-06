@@ -14,6 +14,11 @@ class MeetingRessource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'=>$this->id,
+            'type'=>$this->type,
+            'date'=>$this->date,
+            'comment'=>$this->comment
+        ];
     }
 }

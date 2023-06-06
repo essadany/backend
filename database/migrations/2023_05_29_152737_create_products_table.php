@@ -15,12 +15,13 @@ return new class extends Migration
             $table->increments("id");
             $table->string("product_ref")->unique();
             $table->string("customer_ref");
+            $table->integer("customer_id")->unsigned();
             $table->string("name");
-            $table->enum("zone",['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne'])->default('Module');
+            $table->enum("zone",['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']);
             $table->string("uap");
             $table->timestamps();
 
-            $table->foreign('customer_ref')->references('customer_ref')->on('customers')
+            $table->foreign('customer_id')->references('id')->on('customers')
             ->cascadeOnUpdate()
             ->restrictOnDelete();	
           

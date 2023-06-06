@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class customerController extends Controller
 {
@@ -97,4 +98,6 @@ class customerController extends Controller
             ],404);
         }
     }
+
+ 
 }

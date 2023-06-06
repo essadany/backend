@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('action_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('action_id');
+            $table->integer('action_id')->unsigned();
             $table->string('comment');
             $table->date('comment_date');
             $table->timestamps();
 
             $table->foreign('action_id')->references('id')->on('actions')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            ->restrictOnDelete();	
         });
     }
 

@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('ishikawas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('customer_ref')->unique();
-            $table->string('name');
-            $table->enum('category',["Intern", "Extern"]);
-            $table->string('info')->nullable();
+            $table->integer('claim_id')->unsigned();
             $table->timestamps();
 
-            
+            $table->foreign('claim_id')->references('id')->on('claims')
+            ->cascadeOnUpdate()
+            ->restrictOnDelete();	
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('ishikawas');
     }
 };

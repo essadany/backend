@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Claim extends Model
 {
+    use HasFactory;
     protected $fillable = ['internal_ID','refRecClient','product_ref', 'engraving', 'prod_date', 'object', 
     'opening_date', 'final_cusomer', 'claim_details', 'def_mode',
     'nbr_claimed_parts', 'returned_parts'];
@@ -17,6 +18,6 @@ class Claim extends Model
         'status' => 'not started'
     ];
     protected $table = 'claims';
-    use HasFactory;
+    
     
 }
