@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('claims', function (Blueprint $table) {
             $table->increments('id');
             $table->string('internal_ID')->unique();
-            $table->string('refRecClient');
-            $table->string('product_ref');
-            $table->string('engraving');
-            $table->date('prod_date');
-            $table->string('object');
-            $table->date('opening_date');
+            $table->string('refRecClient')->nullable();
+            $table->string('product_ref')->nullable();
+            $table->string('engraving')->nullable();
+            $table->date('prod_date')->nullable();
+            $table->string('object')->nullable();
+            $table->date('opening_date')->nullable();
             $table->date('done_date')->nullable();
             $table->string('final_cusomer')->nullable();
-            $table->string('claim_details');
-            $table->string('def_mode');
+            $table->string('claim_details')->nullable();
+            $table->string('def_mode')->nullable();
             $table->integer('nbr_claimed_parts');
             $table->date('returned_parts')->nullable();
             $table->enum('status',['not started','on going', 'done'])->default('not started');
@@ -31,8 +31,9 @@ return new class extends Migration
 
 
             $table->foreign('product_ref')->references('product_ref')->on('products')
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();	
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+            
 
         });
         

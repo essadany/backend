@@ -32,7 +32,7 @@ return new class extends Migration
             ->restrictOnDelete();
             $table->foreign('annexe_id')->references('id')->on('annexes')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            ->nullOnDelete();
 
         });
     }

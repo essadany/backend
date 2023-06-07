@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('leader');
+            $table->string('leader')->nullable();
             $table->timestamps();
         });
     }

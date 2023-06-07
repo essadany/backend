@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('meetings', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type');
-            $table->date('date');
-            $table->string('comment');
+            $table->string('type')->nullable();
+            $table->date('date')->nullable();
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }

@@ -5,13 +5,15 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() 
     {
+        
         return Product::all();
     }
 
@@ -100,28 +102,32 @@ class ProductController extends Controller
             ],404);
         }
     }
-    //get Products By Customer Name
-    public function getProductsByCustomerName($customerName)
+    //
+    public function getCustomerNameByProductId($id)
     {
-        // Make an HTTP request to fetch the customer record from the customers API
-        $response = Http::get('/customers', [
-            'name' => $customerName,
-        ]);
+        $product = Product::find($id);
+        $customer = $product->customer;
+        return response()->json($customer);
+        //$customerName = $product->customer->name;
+        //return response()->json(['customer_name' => $customerName]);
+    }
 
-        if ($response->successful()) {
-            $customer = $response->json();
+    public function getCustomerIdByName($name)
+    {
+        
+        $customer_id = DB::table('products')
+            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->where('customers.name', '=', $name)
+            ->select( 'customers.id')
+            ->get();
+        return $customer_id;
+    }
+    public function getProductsJoinCustomers(){
+        $products = DB::table('products')
+            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->select( 'products.id as product_id','products.product_ref','products.customer_ref','products.name as product_name','products.customer_id','customers.name as customer_name','products.zone','products.uap')
+            ->get();
+        return $products;
 
-            // Extract the customer ID from the customer record
-            $customerId = $customer['id'];
-
-            // Fetch the products associated with the customer ID from your products database
-            $products = Product::where('customer_id', $customerId)->get();
-
-            // Return the list of products
-            return $products;
-        } else {
-            // Handle the case where the request to the customers API failed
-            return null;
-        }
     }
 }

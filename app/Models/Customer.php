@@ -14,4 +14,13 @@ class Customer extends Model
         'category' => ['Intern', 'Extern']
     ];
    
+    /**
+     * Get all of the products for the Customer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('ishikawas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('claim_id')->unsigned();
+            $table->integer('claim_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('claim_id')->references('id')->on('claims')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();	
+            ->nullOnDelete();	
         });
     }
 

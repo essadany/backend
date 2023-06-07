@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('five_why_id')->unsigned();
-            $table->enum('type',['occurence','detection','system']);
-            $table->string('input');
+            $table->integer('five_why_id')->unsigned()->nullable();
+            $table->enum('type',['occurence','detection','system'])->nullable();
+            $table->string('input')->nullable();
             $table->timestamps();
 
             $table->foreign('five_why_id')->references('id')->on('five_whys')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();	
+            ->nullOnDelete();	
         });
     }
 

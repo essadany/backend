@@ -13,26 +13,26 @@ return new class extends Migration
     {
         Schema::create('problem_descriptions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('claim_id')->unsigned();
-            $table->string('what');
-            $table->string('who');
-            $table->string('where');
-            $table->string('when');
-            $table->string('why');
-            $table->string('how');
-            $table->string('how_many_before');
-            $table->string('how_many_after');
-            $table->boolean('recurrence');
-            $table->boolean('received');
+            $table->integer('claim_id')->unsigned()->nullable();
+            $table->string('what')->nullable();
+            $table->string('who')->nullable();
+            $table->string('where')->nullable();
+            $table->string('when')->nullable();
+            $table->string('why')->nullable();
+            $table->string('how')->nullable();
+            $table->integer('how_many_before')->nullable();
+            $table->integer('how_many_after')->nullable();
+            $table->boolean('recurrence')->nullable();
+            $table->boolean('received')->nullable();
             $table->date('date_reception')->nullable();
-            $table->string('date_done');
-            $table->boolean('bontaz_fault');
-            $table->string('description');
+            $table->date('date_done')->nullable();
+            $table->boolean('bontaz_fault')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
 
             $table->foreign('claim_id')->references('id')->on('claims')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();	
+            ->nullOnDelete();	
 
             
         });

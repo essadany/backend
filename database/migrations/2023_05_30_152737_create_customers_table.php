@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('reference')->unique();
-            $table->string('name');
-            $table->enum('category',["Intern", "Extern"]);
+            $table->string('customer_ref')->unique()->nullable();
+            $table->string('name')->nullable();
+            $table->enum('category',["Intern", "Extern"])->nullable();
             $table->string('info')->nullable();
             $table->timestamps();
 

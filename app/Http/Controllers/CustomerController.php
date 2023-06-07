@@ -5,6 +5,7 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class customerController extends Controller
 {
@@ -99,5 +100,11 @@ class customerController extends Controller
         }
     }
 
- 
+    // Get Products
+    public function getProductsByCustomer($id){
+        $customer = Customer::find($id);
+        $products = $customer->products;
+        //return $products;
+        return response()->json($products);
+    }
 }

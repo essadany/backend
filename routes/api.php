@@ -91,6 +91,7 @@ Route::get('/customers',function(){
 Route::get('customer/{id}',function($id){
     return new CustomerRessource(Customer::findOrFail($id));
 });
+Route::get('/products_by_customer/{id}',[CustomerController::class, 'getProductsByCustomer']);
 
 Route::post('/customer',[CustomerController::class, 'store']);
 
@@ -105,6 +106,9 @@ Route::get('/products',function(){
 Route::get('product/{id}',function($id){
     return new ProductRessource(Product::findOrFail($id));
 });
+Route::get('/customer_by_product/{id}',[ProductController::class, 'getCustomerNameByProductId']);
+Route::get('/customer_id_by_name/{name}',[ProductController::class, 'getCustomerIdByName']);
+Route::get('/products_join_customers',[ProductController::class, 'getProductsJoinCustomers']);
 
 Route::post('/product',[ProductController::class, 'store']);
 

@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('label_checkings', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('sorting_method');
-            $table->enum('bontaz_plant',['El Jadia','Shanghai','Marnaz','Fouchana', 'Velka Dobra','Viana Do Casteo','Troy','Pingamonhangaba-sp']);
+            $table->integer('claim_id')->unsigned()->nullable();
+            $table->string('sorting_method')->nullable();
+            $table->enum('bontaz_plant',['El Jadia','Shanghai','Marnaz','Fouchana', 'Velka Dobra','Viana Do Casteo','Troy','Pingamonhangaba-sp'])->nullable();
             $table->timestamps();
+
+            $table->foreign('claim_id')->references('id')->on('claims')
+            ->cascadeOnUpdate()
+            ->nullOnDelete();
+
 
 
 

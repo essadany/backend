@@ -15,19 +15,19 @@ return new class extends Migration
             $table->increments("id");
             $table->string("product_ref")->unique();
             $table->string("customer_ref");
-            $table->integer("customer_id")->unsigned();
+            $table->integer("customer_id")->unsigned()->nullable();
             $table->string("name");
             $table->enum("zone",['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']);
-            $table->string("uap");
+            $table->string("uap")->nullable();
             $table->timestamps();
 
             $table->foreign('customer_id')->references('id')->on('customers')
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();	
-          
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
         
     }
+    
 
     /**
      * Reverse the migrations.

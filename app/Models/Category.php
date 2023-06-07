@@ -21,4 +21,7 @@ class Category extends Model
         'type'=>['Person','Machine','Materials','Method', 'Management', 'Measurment', 'Environment', 'Money'],
         'status'=>['on going','confirmed','not confirmed']
     ];
+    protected $attributes = [
+        'isPrincipale' => false
+    ];
 }

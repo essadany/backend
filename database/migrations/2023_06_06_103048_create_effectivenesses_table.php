@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('effectivenesses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('report_id')->unsigned();
-            $table->string('title');
-            $table->string('file');
+            $table->integer('report_id')->unsigned()->nullable();
+            $table->string('title')->nullable();
+            $table->string('file')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
 
             $table->foreign('report_id')->references('id')->on('reports')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();	
+            ->nullOnDelete();	
         });
     }
 

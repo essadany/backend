@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Product extends Model
 {
     use HasFactory;
@@ -14,7 +14,10 @@ class Product extends Model
         'zone' => ['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']
     ];
     
-    
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }
 
 

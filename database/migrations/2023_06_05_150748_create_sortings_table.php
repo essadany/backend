@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('sortings', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('containement_id')->unsigned();
-            $table->string('location_company');
-            $table->integer('qty_to_sort');
-            $table->integer('qty_sorted');
-            $table->integer('qty_NOK');
-            $table->boolean('scrap');
+            $table->integer('containement_id')->unsigned()->nullable();
+            $table->string('location_company')->nullable();
+            $table->integer('qty_to_sort')->nullable();
+            $table->integer('qty_sorted')->nullable();
+            $table->integer('qty_NOK')->nullable();
+            $table->boolean('scrap')->nullable();
             $table->timestamps();
 
             $table->foreign('containement_id')->references('id')->on('containements')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();	
+            ->nullOnDelete();	
         });
     }
 
