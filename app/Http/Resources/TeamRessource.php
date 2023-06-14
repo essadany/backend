@@ -16,7 +16,9 @@ class TeamRessource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'claim_id'=>$this->claim_id,
             'leader'=>$this->leader
+            
         ];
     }
 }

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('problem_id')->unsigned()->nullable();
-            $table->integer('report_id')->unsigned()->nullable();
-            $table->integer('annexe_id')->unsigned()->nullable();
-            $table->integer('label_check_id')->unsigned()->nullable();
+            $table->integer('problem_id')->unsigned();
+            $table->integer('report_id')->unsigned();
+            $table->integer('annexe_id')->unsigned();
+            $table->integer('label_check_id')->unsigned();
             $table->string('name')->nullable();
             $table->string('type')->nullable();
             $table->string('bloob');
@@ -26,13 +26,13 @@ return new class extends Migration
 
             $table->foreign('problem_id')->references('id')->on('problem_descriptions')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            ;
             $table->foreign('report_id')->references('id')->on('reports')
             ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            ;
             $table->foreign('annexe_id')->references('id')->on('annexes')
             ->cascadeOnUpdate()
-            ->nullOnDelete();
+            ;
 
         });
     }

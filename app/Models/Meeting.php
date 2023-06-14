@@ -12,4 +12,7 @@ class Meeting extends Model
                             'date',
                             'comment'];
     protected $table = 'meetings';
+    protected $attributes = [
+        'deleted'=>false
+    ];
 }

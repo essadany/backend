@@ -13,22 +13,22 @@ return new class extends Migration
     {
         Schema::create('meeting_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->integer('meet_id')->unsigned()->nullable();
-            $table->integer('team_id')->unsigned()->nullable();
+            $table->integer('user_id')->unsigned();
+            $table->integer('meet_id')->unsigned();
+            $table->integer('team_id')->unsigned();
             $table->boolean('present')->default(true);
             $table->string('comment')->nullable();
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
             $table->foreign('meet_id')->references('id')->on('meetings')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
             $table->foreign('team_id')->references('id')->on('teams')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
             
         });
     }

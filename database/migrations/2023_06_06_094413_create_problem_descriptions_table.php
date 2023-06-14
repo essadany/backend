@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('problem_descriptions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('claim_id')->unsigned()->nullable();
+            $table->integer('claim_id')->unsigned();
             $table->string('what')->nullable();
             $table->string('who')->nullable();
             $table->string('where')->nullable();
@@ -32,7 +32,7 @@ return new class extends Migration
 
             $table->foreign('claim_id')->references('id')->on('claims')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
 
             
         });

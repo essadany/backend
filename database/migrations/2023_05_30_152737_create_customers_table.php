@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->enum('category',["Intern", "Extern"])->nullable();
             $table->string('info')->nullable();
+            $table->boolean('deleted')->default(false);
             $table->timestamps();
 
             

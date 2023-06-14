@@ -13,7 +13,9 @@ class Product extends Model
     protected $enum = [
         'zone' => ['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']
     ];
-    
+    protected $attritbutes = [
+        'deleted' => false
+    ];
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);

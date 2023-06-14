@@ -18,6 +18,8 @@ class CustomerRessource extends JsonResource
         'customer_ref' => $this->customer_ref,
         'name' => $this->name,
         'category' => $this->category,
-        'info' => $this->info];
+        'info' => $this->info,
+        'deleted' => $this->deleted
+    ];
     }
 }

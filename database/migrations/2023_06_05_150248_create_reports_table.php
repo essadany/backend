@@ -1,4 +1,4 @@
-nullOnDelete<?php
+restrictOnDelete<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('report_ref')->nullable();
+            $table->integer('claim_id')->unsigned();
             $table->date('due_date')->nullable();
             $table->date('sub_date')->nullable();
             $table->string('contianement_actions')->nullable();
             $table->string('first_batch3')->nullable();
-            $table->string('first_batch6');
+            $table->string('first_batch6')->nullable();
             $table->date('date_cause_definition')->nullable();
             $table->string('reported_by')->nullable();
             $table->string('pilot')->nullable();
@@ -31,9 +31,9 @@ return new class extends Migration
             $table->string('progress_rate')->nullable();
             $table->timestamps();
 
-            $table->foreign('report_ref')->references('internal_ID')->on('claims')
+            $table->foreign('claim_id')->references('id')->on('claims')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
         });
     }
 

@@ -15,15 +15,15 @@ return new class extends Migration
             $table->increments("id");
             $table->string("product_ref")->unique();
             $table->string("customer_ref");
-            $table->integer("customer_id")->unsigned()->nullable();
+            $table->integer("customer_id")->unsigned();
             $table->string("name");
             $table->enum("zone",['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']);
             $table->string("uap")->nullable();
+            $table->boolean("deleted")->default(false);
             $table->timestamps();
 
             $table->foreign('customer_id')->references('id')->on('customers')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            ->onUpdate('cascade');
         });
         
     }

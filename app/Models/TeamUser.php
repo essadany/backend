@@ -11,4 +11,7 @@ class TeamUser extends Model
     protected $fillable=[   'user_id',
                             'team_id'];
     protected $table = 'team_users';
+    protected $attributes = [
+        'deleted'=>false
+    ];
 }

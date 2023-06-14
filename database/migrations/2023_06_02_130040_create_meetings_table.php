@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->date('date')->nullable();
             $table->string('comment')->nullable();
+            $table->boolean("deleted")->default(false);
             $table->timestamps();
         });
     }

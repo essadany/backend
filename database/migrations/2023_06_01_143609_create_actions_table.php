@@ -13,19 +13,20 @@ return new class extends Migration
     {
         Schema::create('actions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->string('action')->nullable();
+            $table->integer('user_id')->unsigned();
+            $table->string('action');
             $table->enum('type',['containment','potential','implemented','preventive'])->default('containment');
             $table->string('pilot')->nullable();
             $table->date('planned_date');
             $table->date('start_date')->nullable();
             $table->enum('status',['not started','on going', 'done'])->default('not started')->default('not started');
             $table->date('done_date')->nullable();
+            $table->boolean("deleted")->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
            
         });
     }

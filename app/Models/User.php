@@ -23,7 +23,8 @@ class User extends Authenticatable
         'role'=>['admin','user','leader']
     ];
     protected $attributes = [
-        'role' => 'user'
+        'role' => 'user',
+        'deleted'=>false
     ];
     protected $table = 'users';
 
@@ -46,4 +47,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class,'team_users');
+    }
 }

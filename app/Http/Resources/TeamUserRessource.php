@@ -16,7 +16,8 @@ class TeamUserRessource extends JsonResource
     {
         return  [
             'user_id'=>$this->user_id,
-            'team_id'=>$this->team_id
+            'team_id'=>$this->team_id,
+            'deleted' => $this->deleted
         ];
     }
 }

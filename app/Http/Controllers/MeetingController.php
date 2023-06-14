@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Meeting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 class MeetingController extends Controller
 {
     /**
@@ -92,5 +94,26 @@ class MeetingController extends Controller
                 'message' => 'Meeting Record Not Found'
             ],404);
         }
+    }
+    //Disactivate Meeting
+    public function disactivate(Request $request, $id)
+    {
+        if(Meeting::where('id',$id)->exists()){
+            $Meeting = Meeting::find($id);
+            $Meeting->deleted = true;
+            
+            $Meeting->save();
+            return response()->json([
+                'message'=>'Meeting Record Disactivated Successfully'
+            ],);
+        }
+    }
+    //Get Activated Meetings
+    public function getActivatedMeetings(){
+        $Meetings = DB::table('meetings')
+            ->where('meetings.deleted',false)
+            ->select( 'meetings.*')
+            ->get();
+        return $Meetings;
     }
 }

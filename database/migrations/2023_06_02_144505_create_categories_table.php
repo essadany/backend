@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('ishikawa_id')->unsigned()->nullable();
-            $table->enum('type',['Person','Machine','Materials','Method', 'Management', 'Measurment', 'Environment', 'Money'])->nullable();
+            $table->integer('ishikawa_id')->unsigned();
+            $table->enum('type',['Person','Machine','Materials','Method', 'Management', 'Measurment', 'Environment', 'Money']);
             $table->string('input')->nullable();
             $table->boolean('isPrincipale')->default(false);
             $table->enum('status',['on going','confirmed','not confirmed'])->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->foreign('ishikawa_id')->references('id')->on('ishikawas')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
             
         });
     }

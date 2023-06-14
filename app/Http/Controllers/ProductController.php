@@ -85,6 +85,8 @@ class ProductController extends Controller
         }
     }
 
+
+
     /**
      * Remove the specified resource from storage.
      */
@@ -92,7 +94,7 @@ class ProductController extends Controller
     {
         if(Product::where("id",$id)->exists()){
             $product = Product::find($id);
-            $product->delete();
+            $product->deleted = 1;
             return response()->json([
                 'message' => 'Product Record Deleted Successfully'
             ], 200);
@@ -122,12 +124,36 @@ class ProductController extends Controller
             ->get();
         return $customer_id;
     }
+    
+    //Disactivate Product
+    public function disactivate(Request $request, $id)
+    {
+        if(Product::where('id',$id)->exists()){
+            $product = Product::find($id);
+            $product->deleted = true;
+            
+            $product->save();
+            return response()->json([
+                'message'=>'Product Record Disactivated Successfully'
+            ],);
+        }
+    }
+    //Get Activated Products
+    public function getActivatedProducts(){
+        $Products = DB::table('products')
+            ->where('products.deleted',false)
+            ->select( 'products.*')
+            ->get();
+        return $Products;
+    }
+    //Products join Customers
     public function getProductsJoinCustomers(){
         $products = DB::table('products')
             ->join('customers', 'products.customer_id', '=', 'customers.id')
-            ->select( 'products.id as product_id','products.product_ref','products.customer_ref','products.name as product_name','products.customer_id','customers.name as customer_name','products.zone','products.uap')
+            ->where('products.deleted',false)
+            ->select( 'products.id as product_id','products.product_ref','products.customer_ref','products.name as product_name','products.customer_id','customers.name as customer_name','products.zone','products.uap','products.deleted')
             ->get();
         return $products;
-
     }
+
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Action;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 class ActionController extends Controller
 {
     /**
@@ -104,5 +106,26 @@ class ActionController extends Controller
                 'message' => 'Action Record Not Found'
             ],404);
         }
+    }
+    //Disactivate Action
+    public function disactivate(Request $request, $id)
+    {
+        if(Action::where('id',$id)->exists()){
+            $Action = Action::find($id);
+            $Action->deleted = true;
+            
+            $Action->save();
+            return response()->json([
+                'message'=>'Action Record Disactivated Successfully'
+            ],);
+        }
+    }
+    //Get Activated Actions
+    public function getActivatedActions(){
+        $Actions = DB::table('actions')
+            ->where('actions.deleted',false)
+            ->select( 'actions.*')
+            ->get();
+        return $Actions;
     }
 }

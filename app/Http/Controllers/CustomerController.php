@@ -107,4 +107,26 @@ class customerController extends Controller
         //return $products;
         return response()->json($products);
     }
+
+    //Disactivate Customer
+    public function disactivate(Request $request, $id)
+    {
+        if(Customer::where('id',$id)->exists()){
+            $Customer = Customer::find($id);
+            $Customer->deleted = true;
+            
+            $Customer->save();
+            return response()->json([
+                'message'=>'Customer Record Disactivated Successfully'
+            ],);
+        }
+    }
+    //Get Activated Customers
+    public function getActivatedCustomers(){
+        $customers = DB::table('customers')
+            ->where('customers.deleted',false)
+            ->select( 'customers.*')
+            ->get();
+        return $customers;
+    }
 }

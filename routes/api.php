@@ -91,11 +91,15 @@ Route::get('/customers',function(){
 Route::get('customer/{id}',function($id){
     return new CustomerRessource(Customer::findOrFail($id));
 });
+Route::get('/customers_activated',[CustomerController::class, 'getActivatedCustomers']);
+
 Route::get('/products_by_customer/{id}',[CustomerController::class, 'getProductsByCustomer']);
 
 Route::post('/customer',[CustomerController::class, 'store']);
 
 Route::put('/customer/{id}',[CustomerController::class, 'update']);
+Route::put('/customer_disactivated/{id}',[CustomerController::class, 'disactivate']);
+
 
 Route::delete('/customer/{id}',[CustomerController::class, 'destroy']);
 //  --------------------------------------------Product--------------------------------------------------------------------
@@ -106,6 +110,8 @@ Route::get('/products',function(){
 Route::get('product/{id}',function($id){
     return new ProductRessource(Product::findOrFail($id));
 });
+Route::get('/products_activated',[ProductController::class, 'getActivatedProducts']);
+
 Route::get('/customer_by_product/{id}',[ProductController::class, 'getCustomerNameByProductId']);
 Route::get('/customer_id_by_name/{name}',[ProductController::class, 'getCustomerIdByName']);
 Route::get('/products_join_customers',[ProductController::class, 'getProductsJoinCustomers']);
@@ -113,6 +119,7 @@ Route::get('/products_join_customers',[ProductController::class, 'getProductsJoi
 Route::post('/product',[ProductController::class, 'store']);
 
 Route::put('/product/{id}',[ProductController::class, 'update']);
+Route::put('/product_disactivated/{id}',[ProductController::class, 'disactivate']);
 
 Route::delete('/product/{id}',[ProductController::class, 'destroy']);
 
@@ -124,10 +131,14 @@ Route::get('/claims',function(){
 Route::get('claim/{id}',function($id){
     return new ClaimRessource(Claim::findOrFail($id));
 });
+Route::get('/claims_join',[ClaimController::class, 'getClaimsJoin']);
+Route::get('/claim/{id}/team',[ClaimController::class, 'getTeamByClaim']);
+Route::get('/claims_activated',[ClaimController::class, 'getActivatedClaims']);
 
 Route::post('/claim',[ClaimController::class, 'store']);
 
 Route::put('/claim/{id}',[ClaimController::class, 'update']);
+Route::put('/claim_disactivated/{id}',[ClaimController::class, 'disactivate']);
 
 Route::delete('/claim/{id}',[ClaimController::class, 'destroy']);
 
@@ -140,9 +151,12 @@ Route::get('/users',function(){
 Route::get('user/{id}',function($id){
     return new UserRessource(User::findOrFail($id));
 });
+Route::get('/users_activated',[UserController::class, 'getActivatedUsers']);
+
 Route::post('/user',[UserController::class, 'store']);
 
 Route::put('/user/{id}',[UserController::class, 'update']);
+Route::put('/user_disactivated/{id}',[UserController::class, 'disactivate']);
 
 Route::delete('/user/{id}',[UserController::class, 'destroy']);
 //  --------------------------------------------Actions--------------------------------------------------------------------
@@ -153,9 +167,12 @@ Route::get('/actions',function(){
 Route::get('action/{id}',function($id){
     return new ActionRessource(Action::findOrFail($id));
 });
+Route::get('/actions_activated',[ActionController::class, 'getActivatedActions']);
+
 Route::post('/action',[ActionController::class, 'store']);
 
 Route::put('/action/{id}',[ActionController::class, 'update']);
+Route::put('/action_disactivated/{id}',[ActionController::class, 'disactivate']);
 
 Route::delete('/action/{id}',[ActionController::class, 'destroy']);
 //--------------------------------------------ActionUser--------------------------------------------------------------------
@@ -179,6 +196,10 @@ Route::get('/teams',function(){
 Route::get('team/{id}',function($id){
     return new TeamRessource(Team::findOrFail($id));
 });
+Route::get('/team/{id}/users',[TeamController::class, 'getUsersByTeam']);
+
+Route::post('/teams/{team}/users', [TeamController::class, 'addUsers']);
+
 Route::post('/team',[TeamController::class, 'store']);
 
 Route::put('/team/{id}',[TeamController::class, 'update']);
@@ -207,9 +228,12 @@ Route::get('/meetings',function(){
 Route::get('meeting/{id}',function($id){
     return new MeetingRessource(Meeting::findOrFail($id));
 });
+Route::get('/meetings_activated',[MeetingController::class, 'getActivatedMeetings']);
+
 Route::post('/meeting',[MeetingController::class, 'store']);
 
 Route::put('/meeting/{id}',[MeetingController::class, 'update']);
+Route::put('/meeting_disactivated/{id}',[MeetingController::class, 'disactivate']);
 
 Route::delete('/meeting/{id}',[MeetingController::class, 'destroy']);
 //--------------------------------------------MeetingUser--------------------------------------------------------------------

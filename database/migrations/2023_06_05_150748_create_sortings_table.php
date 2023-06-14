@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sortings', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('containement_id')->unsigned()->nullable();
+            $table->integer('containement_id')->unsigned();
             $table->string('location_company')->nullable();
             $table->integer('qty_to_sort')->nullable();
             $table->integer('qty_sorted')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->foreign('containement_id')->references('id')->on('containements')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
         });
     }
 

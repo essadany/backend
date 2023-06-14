@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('team_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id')->unsigned()->nullable();
-            $table->integer('team_id')->unsigned()->nullable();
+            $table->unsignedInteger('user_id')->unsigned();
+            $table->integer('team_id')->unsigned();
+            $table->boolean('deleted')->default(false);
             $table->timestamps();
 
            $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate()
-           ->nullOnDelete();	
+           ;	
             $table->foreign('team_id')->references('id')->on('teams')->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
 
         });
     }

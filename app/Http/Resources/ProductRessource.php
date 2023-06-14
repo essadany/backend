@@ -20,6 +20,7 @@ class ProductRessource extends JsonResource
         'customer_ref' => $this->customer_ref,
         'name' => $this->name,
         'zone' => $this->zone,
-        'uap' => $this->uap];
+        'uap' => $this->uap,
+        'deleted'=>$this->deleted];
     }
 }

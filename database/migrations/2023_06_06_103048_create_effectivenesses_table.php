@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('effectivenesses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('report_id')->unsigned()->nullable();
+            $table->integer('report_id')->unsigned();
             $table->string('title')->nullable();
             $table->string('file')->nullable();
             $table->string('description')->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->foreign('report_id')->references('id')->on('reports')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
         });
     }
 

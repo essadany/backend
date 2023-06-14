@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('containements', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('report_id')->unsigned()->nullable();
+            $table->integer('report_id')->unsigned();
             $table->string('method_description')->nullable();
             $table->string('method_validation')->nullable();
             $table->string('risk_assesment')->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->foreign('report_id')->references('id')->on('reports')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
         });
     }
 

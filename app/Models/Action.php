@@ -16,7 +16,8 @@ class Action extends Model
     ];
     protected $attributes = [
         'type' => 'containment',
-        'status' => 'not started'
+        'status' => 'not started',
+        'deleted'=>false
     ];
     protected $table = 'actions';
 }

@@ -18,7 +18,8 @@ class MeetingRessource extends JsonResource
             'id'=>$this->id,
             'type'=>$this->type,
             'date'=>$this->date,
-            'comment'=>$this->comment
+            'comment'=>$this->comment,
+            'deleted'=>$this->deleted
         ];
     }
 }

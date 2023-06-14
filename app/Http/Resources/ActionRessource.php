@@ -22,7 +22,8 @@ class ActionRessource extends JsonResource
             'planned_date'=>$this->planned_date,
             'start_date'=>$this->start_date, 
             'status'=>$this->status, 
-            'done_date'=>$this->done_date
+            'done_date'=>$this->done_date,
+            'deleted'=>$this->deleted
         ];
     }
 }

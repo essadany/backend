@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('five_whys', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('claim_id')->unsigned()->nullable();
+            $table->integer('claim_id')->unsigned();
             $table->timestamps();
             
             $table->foreign('claim_id')->references('id')->on('claims')
             ->cascadeOnUpdate()
-            ->nullOnDelete();	
+            ;	
         });
     }
 

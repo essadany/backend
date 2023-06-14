@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 use App\Models\Claim;
+use App\Models\Team;
+use App\Models\ProblemDescription;
+use App\Models\Report;
+use App\Models\Ishikawa;
+use App\Models\FiveWhy;
+use App\Models\LabelChecking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 class ClaimController extends Controller
 {
     /**
@@ -46,10 +54,34 @@ class ClaimController extends Controller
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
     $Claim = Claim::create($input);
+    //Create associated team
+    $team = new Team();
+    $Claim->team()->save($team);
+    //--------------------
+    //Create associated report
+    $report = new Report();
+    $Claim->report()->save($report);
+    //--------------------
+    //Create associated problem description
+    $prob = new ProblemDescription();
+    $Claim->prob_desc()->save($prob);
+    //--------------------
+    //Create associated ishikawa
+    $ishikawa = new Ishikawa();
+    $Claim->ishikawa()->save($ishikawa);
+    //--------------------
+    //Create associated team
+    $five_why = new FiveWhy();
+    $Claim->five_why()->save($five_why);
+    //--------------------
+    //Create associated team
+    $label = new LabelChecking();
+    $Claim->label_checking()->save($label);
+    //--------------------
     return response()->json([ 
         'success'=>true,
         'message'=> 'Claim Record Created Successfully',
-        'Claim'=>$Claim
+        'Claim'=>$Claim,
     ]);
     }
     /**
@@ -110,5 +142,44 @@ class ClaimController extends Controller
                 'message' => 'Claim Record Not Found'
             ],404);
         }
+    }
+
+    //Disactivate Claim
+    public function disactivate(Request $request, $id)
+    {
+        if(Claim::where('id',$id)->exists()){
+            $Claim = Claim::find($id);
+            $Claim->deleted = true;
+            
+            $Claim->save();
+            return response()->json([
+                'message'=>'Claim Record Disactivated Successfully'
+            ],);
+        }
+    }
+    //Get Activated Claims
+    public function getActivatedClaims(){
+        $Claims = DB::table('claims')
+            ->where('claims.deleted',false)
+            ->select( 'claims.*')
+            ->get();
+        return $Claims;
+    }
+
+    //Claims join Customers and Products
+    public function getClaimsJoin(){
+        $claims = DB::table('claims')
+            ->join('products', 'claims.product_ref', '=', 'products.product_ref')
+            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->where('claims.deleted',false)
+            ->select( 'customers.name as customer_name','claims.*','products.name as product_name','customers.name','customers.category')
+            ->get();
+        return $claims;
+    }
+    public function getTeamByClaim($id){
+        $Claim = Claim::find($id);
+        $team = $Claim->team ;
+        return response()->json($team);
+
     }
 }

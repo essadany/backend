@@ -13,6 +13,9 @@ class Customer extends Model
     protected $enum = [
         'category' => ['Intern', 'Extern']
     ];
+    protected $attributes = [
+        'deleted'=>false
+    ];
    
     /**
      * Get all of the products for the Customer

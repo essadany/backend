@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\belongsToMany;
 class Report extends Model
 {
     use HasFactory;
@@ -25,4 +26,9 @@ class Report extends Model
     'pfmea',
     'dfmea',
     'progress_rate'];
+
+    public function claim()
+    {
+        return $this->belongsTo(Claim::class);
+    }
 }
