@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\Meeting;
+use App\Models\Claim;
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -27,23 +30,28 @@ class MeetingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $claim_id)
     {
+        $claim = Claim::find($claim_id);
+        $team_id = $claim->team->id;
         $input = $request->all();
-        $validator = Validator::make($input,[
-            'type'=>'required',
-            'date'=>'required',
-            'comment'=>''
+        $input['team_id'] = $team_id;
+        $validator = Validator::make($input, [
+            'type' => 'required',
+            'date' => 'required',
+            'comment' => '',
         ]);
-        if($validator->fails()){
-        return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error, make sure that all input required are not empty', $validator->errors());
         }
-    $meeting = Meeting::create($input);
-    return response()->json([ 
-        'success'=>true,
-        'message'=> 'Meeting Record Created Successfully',
-        'Meeting'=>$meeting
-    ]);
+        $meeting = Meeting::create($input);
+
+         
+        return response()->json([
+            'success' => true,
+            'message' => 'Meeting Record Created Successfully',
+            'meeting' => $meeting
+        ]);
     }
     /**
      * Display the specified resource.

@@ -31,4 +31,14 @@ class Report extends Model
     {
         return $this->belongsTo(Claim::class);
     }
+
+    /**
+     * Get all of the actions for the Report
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function actions()
+    {
+        return $this->hasMany(Action::class);
+    }
 }

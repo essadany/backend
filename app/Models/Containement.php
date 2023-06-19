@@ -10,7 +10,7 @@ class Containement extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'report_id',
+        'claim_id',
         'method_description',
         'method_validation',
         'risk_assesment',
@@ -20,5 +20,13 @@ class Containement extends Model
     public function claim()
     {
         return $this->belongsTo(Claim::class);
+    }
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sortings()
+    {
+        return $this->hasMany(Sorting::class);
     }
 }

@@ -16,7 +16,7 @@ class ContainementRessource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'report_id'=>$this->report_id,
+            'claim_id'=>$this->claim_id,
             'method_description'=>$this->method_description,
             'method_validation'=>$this->method_validation,
             'risk_assesment'=>$this->risk_assesment,

@@ -50,4 +50,5 @@ class Claim extends Model
     {
         return $this->hasOne(LabelChecking::class);
     }
+    
 }

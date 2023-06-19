@@ -52,4 +52,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Team::class,'team_users');
     }
+    /**
+   
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function meetings()
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_users');
+    }
 }

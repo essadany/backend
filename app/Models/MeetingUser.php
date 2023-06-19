@@ -9,9 +9,7 @@ class MeetingUser extends Model
 {
     use HasFactory;
     protected $fillable = ['user_id',
-                           'team_id',
-                           'meet_id',
-                           'present',
-                           'comment'];
+                           'meeting_id'];
     protected $table = 'meeting_users';
+   
 }

@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\TeamUser;
+use App\Models\Team;
+use App\Models\User;
+use App\Models\Claim;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class TeamUserController extends Controller
@@ -22,26 +26,7 @@ class TeamUserController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $input = $request->all();
-        $validator = Validator::make($input,[
-            'user_id'=>'required',
-            'team_id'=>'required',
-        ]);
-        if($validator->fails()){
-        return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
-        }
-    $TeamUser = TeamUser::create($input);
-    return response()->json([ 
-        'success'=>true,
-        'message'=> 'TeamUser Record Created Successfully',
-        'TeamUser'=>$TeamUser
-    ]);
-    }
+
     /**
      * Display the specified resource.
      */
@@ -91,4 +76,83 @@ class TeamUserController extends Controller
             ],404);
         }
     }
+    //Disactivate Team_user
+    public function disactivate(Request $request,$team_id,$user_id)
+    {
+    
+       // Get the team and user from the database.
+       $team = Team::find($team_id);
+       $user = User::find($user_id);
+
+      // Check if the user exists in the team.
+      if ($team->users()->where('user_id', $user_id)->exists()) {
+        // Update the `deleted` column in the `team_user` table.
+        $team->users()->updateExistingPivot($user, ['deleted' =>true]);
+
+        // Return a success response.
+        return response()->json([
+            'success' => true,
+        ]);
+    } else {
+        // Return an error response.
+        return response()->json([
+            'error' => 'User does not exist in team',
+        ]);
+    }
+    }   
+   
+    
+    public function addUserToTeam(Request $request)
+    {
+       // Get the team and the user from the database by their IDs.
+       $team = Team::find($request->team_id);
+       $user = User::find($request->user_id);
+
+       // Check if the user is already in the team.
+       if (!$team->users->contains($user)) {
+        // Add the user to the team.
+        $team->users()->attach($user);
+
+        // Redirect the user back to the team page.
+        return response()->json([
+            'message'=>' User Added successfuly to the team',
+            'success' => true,
+        ]);
+        } else {
+        // Redirect the user back to the team page with a message that the user is already in the team.
+        return response()->json([
+            'success' => false,
+            'message' => 'The user is already in the team.',
+        ]);
+        }
+   }
+
+   public function addLeader(Request $request)
+    {
+       // Get the team and the user from the database by their IDs.
+       $team = Team::find($request->team_id);
+       $user = User::find($request->user_id);
+
+       // Check if the user is already in the team.
+       if (!$team->users->contains($user)) {
+        // Add the user to the team.
+        $team->users()->attach($user);
+        $user->role= "leader";
+        $user->save();
+
+        // Redirect the user back to the team page.
+        return response()->json([
+            'message'=>' User Added successfuly to the team',
+            'success' => true,
+        ]);
+        } else {
+        // Redirect the user back to the team page with a message that the user is already in the team.
+        return response()->json([
+            'success' => false,
+            'message' => 'The user is already in the team.',
+        ]);
+        }
+   }
+  
+    
 }

@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('meetings', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type')->nullable();
+            $table->integer('team_id')->unsigned();
             $table->date('date')->nullable();
             $table->string('comment')->nullable();
             $table->boolean("deleted")->default(false);
             $table->timestamps();
+
+            $table->foreign('team_id')->references('id')->on('teams')
+            ->cascadeOnUpdate();
         });
     }
 

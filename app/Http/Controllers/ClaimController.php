@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use App\Models\Claim;
 use App\Models\Team;
+use App\Models\User;
+use App\Models\Containement;
+
 use App\Models\ProblemDescription;
 use App\Models\Report;
 use App\Models\Ishikawa;
@@ -62,6 +65,10 @@ class ClaimController extends Controller
     $report = new Report();
     $Claim->report()->save($report);
     //--------------------
+    //Create associated containement
+    $containement = new Containement();
+    $Claim->containement()->save($containement);
+    //--------------------
     //Create associated problem description
     $prob = new ProblemDescription();
     $Claim->prob_desc()->save($prob);
@@ -70,11 +77,11 @@ class ClaimController extends Controller
     $ishikawa = new Ishikawa();
     $Claim->ishikawa()->save($ishikawa);
     //--------------------
-    //Create associated team
+    //Create associated FiveWhy
     $five_why = new FiveWhy();
     $Claim->five_why()->save($five_why);
     //--------------------
-    //Create associated team
+    //Create associated LabelChecking
     $label = new LabelChecking();
     $Claim->label_checking()->save($label);
     //--------------------
@@ -170,9 +177,9 @@ class ClaimController extends Controller
     public function getClaimsJoin(){
         $claims = DB::table('claims')
             ->join('products', 'claims.product_ref', '=', 'products.product_ref')
-            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->join('customers','customers.id', '=', 'products.customer_id' )
             ->where('claims.deleted',false)
-            ->select( 'customers.name as customer_name','claims.*','products.name as product_name','customers.name','customers.category')
+            ->select( 'customers.id as customer_id','customers.name as customer_name','claims.*','products.name as product_name','customers.category')
             ->get();
         return $claims;
     }
@@ -182,4 +189,49 @@ class ClaimController extends Controller
         return response()->json($team);
 
     }
+    public function getMeetingsByClaim($claim_id){
+        $Claim = Claim::find($claim_id);
+        $team = $Claim->team ;
+        $meetings = $team -> meetings()->where('meetings.deleted',false)->get();
+        return response()->json($meetings);
+    }
+    public function getUsersOfTeam($claim_id)
+    {
+        $claim = Claim::find($claim_id);
+        $team = $claim->team;
+       $users = $team->users()->where('team_users.deleted', false)->get();
+        return response()->json($users);
+    }
+    public function getContainementByClaim($id){
+        $Claim = Claim::find($id);
+        $containement = $Claim->containement ;
+        return response()->json($containement);
+    }
+    public function getReportByClaim($id){
+        $Claim = Claim::find($id);
+        $report = $Claim->report ;
+        return response()->json($report);
+    }
+    public function getProbDescByClaim($id){
+        $Claim = Claim::find($id);
+        $prob_desc = $Claim->prob_desc ;
+        return response()->json($prob_desc);
+    }
+    public function getFiveWhyByClaim($id){
+        $Claim = Claim::find($id);
+        $five_why = $Claim->five_why ;
+        return response()->json($five_why);
+    }
+    public function getLabelCheckByClaim($id){
+        $Claim = Claim::find($id);
+        $label_checking = $Claim->label_checking ;
+        return response()->json($label_checking);
+    }
+    public function getActionsByClaim($id){
+        $Claim = Claim::find($id);
+        $report = $Claim->report;
+        $actions = $report->actions()->get() ;
+        return response()->json($actions);
+    }
+    
 }

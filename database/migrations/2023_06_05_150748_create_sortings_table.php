@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('qty_to_sort')->nullable();
             $table->integer('qty_sorted')->nullable();
             $table->integer('qty_NOK')->nullable();
-            $table->boolean('scrap')->nullable();
+            $table->string('scrap')->nullable();
             $table->timestamps();
 
             $table->foreign('containement_id')->references('id')->on('containements')

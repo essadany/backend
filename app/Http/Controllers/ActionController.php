@@ -35,11 +35,7 @@ class ActionController extends Controller
             'user_id'=>'required',
             'action'=>'required', 
             'type'=>'required', 
-            'pilot'=>'required', 
             'planned_date'=>'required', 
-            'start_date'=>'', 
-            'status'=>'required', 
-            'done_date'=>''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -78,7 +74,6 @@ class ActionController extends Controller
             $Action->user_id = $request->user_id;
             $Action->action = $request->action;
             $Action->type = $request->type;
-            $Action->pilot = $request->pilot;
             $Action->planned_date = $request->planned_date;
             $Action->start_date = $request->start_date;
             $Action->status = $request->status;

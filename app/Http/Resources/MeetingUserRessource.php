@@ -17,10 +17,7 @@ class MeetingUserRessource extends JsonResource
         return [
             'id'=>$this->id,
             'user_id'=>$this->user_id,
-            'team_id'=>$this->team_id,
-            'meet_id'=>$this->meet_id,
-            'present'=>$this->present,
-            'comment'=>$this->comment
+            'meeting_id'=>$this->meeting_id,
         ];
     }
 }

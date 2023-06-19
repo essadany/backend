@@ -23,4 +23,12 @@ class Team extends Model
     {
         return $this->belongsTo(Claim::class);
     }
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
 }

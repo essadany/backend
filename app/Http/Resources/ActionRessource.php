@@ -18,7 +18,6 @@ class ActionRessource extends JsonResource
             'user_id'=>$this->user_id,
             'action'=>$this->action,
             'type'=>$this->type,
-            'pilot'=>$this->pilot,
             'planned_date'=>$this->planned_date,
             'start_date'=>$this->start_date, 
             'status'=>$this->status, 

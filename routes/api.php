@@ -133,7 +133,17 @@ Route::get('claim/{id}',function($id){
 });
 Route::get('/claims_join',[ClaimController::class, 'getClaimsJoin']);
 Route::get('/claim/{id}/team',[ClaimController::class, 'getTeamByClaim']);
+Route::get('/claim/{id}/containement',[ClaimController::class, 'getContainementByClaim']);
+Route::get('/claim/{id}/report',[ClaimController::class, 'getReportByClaim']);
+Route::get('/claim/{id}/five_why',[ClaimController::class, 'getFiveWhyByClaim']);
+Route::get('/claim/{id}/label_checking',[ClaimController::class, 'getLabelCheckByClaim']);
+Route::get('/claim/{id}/actions',[ClaimController::class, 'getActionsByClaim']);
+Route::get('/claim/{id}/problem_description',[ClaimController::class, 'getProbDescByClaim']);
+
 Route::get('/claims_activated',[ClaimController::class, 'getActivatedClaims']);
+Route::get('/claim/{id}/team_users',[ClaimController::class, 'getUsersOfTeam']);
+
+Route::get('/claim/{claim_id}/team_meetings',[ClaimController::class, 'getMeetingsByClaim']);
 
 Route::post('/claim',[ClaimController::class, 'store']);
 
@@ -196,9 +206,7 @@ Route::get('/teams',function(){
 Route::get('team/{id}',function($id){
     return new TeamRessource(Team::findOrFail($id));
 });
-Route::get('/team/{id}/users',[TeamController::class, 'getUsersByTeam']);
 
-Route::post('/teams/{team}/users', [TeamController::class, 'addUsers']);
 
 Route::post('/team',[TeamController::class, 'store']);
 
@@ -214,9 +222,13 @@ Route::get('/team_users',function(){
 Route::get('team_user/{id}',function($id){
     return new TeamUserRessource(TeamUser::findOrFail($id));
 });
-Route::post('/team_user',[TeamUserController::class, 'store']);
+
+Route::post('/add-user-to-team', [TeamUserController::class, 'addUserToTeam']);
+Route::post('/add-leader', [TeamUserController::class, 'addLeader']);
+
 
 Route::put('/team_user/{id}',[TeamUserController::class, 'update']);
+Route::put('/team/{team_id}/user_disactivated/{user_id}',[TeamUserController::class, 'disactivate']);
 
 Route::delete('/team_user/{id}',[TeamUserController::class, 'destroy']);
 
@@ -230,7 +242,7 @@ Route::get('meeting/{id}',function($id){
 });
 Route::get('/meetings_activated',[MeetingController::class, 'getActivatedMeetings']);
 
-Route::post('/meeting',[MeetingController::class, 'store']);
+Route::post('/claim/{id}/meeting',[MeetingController::class, 'store']);
 
 Route::put('/meeting/{id}',[MeetingController::class, 'update']);
 Route::put('/meeting_disactivated/{id}',[MeetingController::class, 'disactivate']);
@@ -241,9 +253,13 @@ Route::get('/meeting_users',function(){
     return MeetingUserRessource::collection(MeetingUser::all());
 });
 
-Route::get('Meeting_user/{id}',function($id){
+Route::get('meeting_user/{id}',function($id){
     return new MeetingUserRessource(MeetingUser::findOrFail($id));
 });
+Route::get('/meeting/{meeting_id}/absences', [MeetingUserController::class, 'getAbsences']);
+
+Route::post('/add_absence',[MeetingUserController::class, 'addAbsence']);
+
 Route::post('/meeting_user',[MeetingUserController::class, 'store']);
 
 Route::put('/meeting_user/{id}',[MeetingUserController::class, 'update']);
@@ -299,6 +315,8 @@ Route::get('/label_checkings',function(){
 Route::get('label_checking/{id}',function($id){
     return new LabelCheckingRessource(LabelChecking::findOrFail($id));
 });
+Route::get('/label_checking_join/{claim_id}',[LabelCheckingController::class, 'getLabelCheckJoin']);
+
 Route::post('/label_checking',[LabelCheckingController::class, 'store']);
 
 Route::put('/label_checking/{id}',[LabelCheckingController::class, 'update']);
@@ -403,6 +421,8 @@ Route::get('/containements',function(){
 Route::get('containement/{id}',function($id){
     return new ContainementRessource(Containement::findOrFail($id));
 });
+Route::get('/containement/{id}/sortings',[ContainementController::class, 'getSortingByContainement']);
+
 Route::post('/containement',[ContainementController::class, 'store']);
 
 Route::put('/containement/{id}',[ContainementController::class, 'update']);

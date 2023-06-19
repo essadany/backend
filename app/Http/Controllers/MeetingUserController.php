@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\MeetingUser;
+use App\Models\Meeting;
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class MeetingUserController extends Controller
@@ -30,10 +33,7 @@ class MeetingUserController extends Controller
         $input = $request->all();
         $validator = Validator::make($input,[
             'user_id'=>'required',
-            'team_id'=>'required',
-            'meet_id'=>'required',
-            'present'=>'required',
-            'comment'=>''
+            'meeting_id'=>'required'
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -69,10 +69,7 @@ class MeetingUserController extends Controller
         if(MeetingUser::where('id',$id)->exists()){
             $MeetingUser = MeetingUser::find($id);
             $MeetingUser->user_id = $request->user_id;
-            $MeetingUser->team_id = $request->team_id;
-            $MeetingUser->meet_id = $request->meet_id;
-            $MeetingUser->present = $request->present;
-            $MeetingUser->comment = $request->comment;
+            $MeetingUser->meeting_id = $request->meeting_id;
             $MeetingUser->save();
             return response()->json([
                 'message'=>'MeetingUser Record Updated Successfully'
@@ -96,5 +93,36 @@ class MeetingUserController extends Controller
                 'message' => 'MeetingUser Record Not Found'
             ],404);
         }
+    }
+
+    public function addAbsence(Request $request)
+    {
+        $meeting = Meeting::find($request->meeting_id);
+        $user = User::find($request->user_id);
+        
+         // Check if the user already exists in the pivot table
+        if ($meeting->users()->find($user->id)) {
+            return response()->json([
+                'message' => 'User already exists in the absent list',
+                'success' => false,
+            ]);
+        }else{
+            $meeting->users()->attach($user);
+
+            return response()->json([
+                'message' => 'User added successfully as absent',
+                'success' => true,
+            ]);
+
+        }
+        
+    }
+    public function getAbsences($meeting_id)
+    {
+        $meeting = Meeting::find($meeting_id);
+        $absents = $meeting->users()->get();
+        return response()->json($absents);
+
+        
     }
 }

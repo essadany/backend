@@ -9,7 +9,7 @@ class Action extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','action', 'pilot', 'planned_date', 'start_date', 'status', 'done_date'];
+    protected $fillable = ['user_id','action', 'planned_date', 'start_date', 'status', 'done_date'];
     protected $enum = [
         'type' => ['containment','potential','implemented','preventive'],
         'status' => ['not started','on going', 'done']
@@ -20,4 +20,14 @@ class Action extends Model
         'deleted'=>false
     ];
     protected $table = 'actions';
+
+    /**
+     * Get the report that owns the Action
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function report(): BelongsTo
+    {
+        return $this->belongsTo(Report::class);
+    }
 }

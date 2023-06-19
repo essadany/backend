@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Team;
+use App\Models\Meeting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -92,17 +93,6 @@ class TeamController extends Controller
             ],404);
         }
     }
+
     
-    public function getUsersByTeam($id){
-        $team = Team::find($id);
-        $users = $team->users;
-        return response()->json($users);
-    }
-
-    public function addUsers(Team $team, User $user)
-    {
-        $team->users()->attach($user);
-        return response()->json(['message' => 'User added to the team successfully']);
-    }
-
 }

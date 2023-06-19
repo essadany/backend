@@ -29,7 +29,7 @@ class ContainementController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'report_id'=>'required',
+            'claim_id'=>'required',
             'method_description'=>'required',
             'method_validation'=>'required',
             'risk_assesment'=>'required',
@@ -67,7 +67,6 @@ class ContainementController extends Controller
     {
         if(Containement::where('id',$id)->exists()){
             $Containement = Containement::find($id);
-            $Containement->report_id = $request->report_id;
             $Containement->method_description = $request->method_description;
             $Containement->method_validation = $request->method_validation;
             $Containement->risk_assesment = $request->risk_assesment;
@@ -94,5 +93,10 @@ class ContainementController extends Controller
                 'message' => 'Containement Record Not Found'
             ],404);
         }
+    }
+    public function getSortingByContainement($id){
+        $containement = Containement::find($id);
+        $sortings = $containement->sortings()->get();
+        return response()->json($sortings);
     }
 }
