@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('type',['containment','potential','implemented','preventive'])->default('containment');
             $table->date('planned_date');
             $table->date('start_date')->nullable();
-            $table->enum('status',['not started','on going', 'done'])->default('not started')->default('not started');
+            $table->enum('status',['not started','on going', 'done'])->default('not started');
             $table->date('done_date')->nullable();
             $table->boolean("deleted")->default(false);
             $table->timestamps();

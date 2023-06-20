@@ -126,6 +126,7 @@ class ClaimController extends Controller
             $Claim->def_mode = $request->def_mode;
             $Claim->nbr_claimed_parts = $request->nbr_claimed_parts;
             $Claim->returned_parts = $request->returned_parts;
+            $Claim->status = $request->status?? 'not started';
             $Claim->save();
             return response()->json([
                 'message'=>'Claim Record Updated Successfully'
@@ -233,5 +234,6 @@ class ClaimController extends Controller
         $actions = $report->actions()->get() ;
         return response()->json($actions);
     }
+    
     
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Annexe;
+use App\Models\ActionComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class AnnexeController extends Controller
@@ -29,7 +29,9 @@ class AnnexeController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'report_id'=>'required'
+            'action_id'=>'required',
+            'comment'=>'required', 
+            'comment_date'=>'required'
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -64,8 +66,9 @@ class AnnexeController extends Controller
     {
         if(Annexe::where('id',$id)->exists()){
             $Annexe = Annexe::find($id);
-            $Annexe->report_id = $request->report_id;
-            
+            $Annexe->action_id = $request->action_id;
+            $Annexe->comment = $request->comment;
+            $Annexe->comment_date = $request->comment_date;
             $Annexe->save();
             return response()->json([
                 'message'=>'Annexe Record Updated Successfully'
@@ -89,5 +92,11 @@ class AnnexeController extends Controller
                 'message' => 'Annexe Record Not Found'
             ],404);
         }
+    }
+    public function getComments($action_id)
+    {
+       $action = Action::find($action_id);
+        $comments = $action->comments()->get();
+        return response()->json($comments);
     }
 }

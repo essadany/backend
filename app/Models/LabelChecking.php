@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\belongsToMany;
 class LabelChecking extends Model
 {
     use HasFactory;
-    protected $fillable = [
+    protected $fillable = [ 'claim_id',
                             'sorting_method',
                             'bontaz_plant'];
     protected $table = 'label_checkings';

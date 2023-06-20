@@ -9,7 +9,7 @@ class Action extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','action', 'planned_date', 'start_date', 'status', 'done_date'];
+    protected $fillable = ['report_id', 'user_id','action','type', 'status','planned_date', 'start_date', 'done_date'];
     protected $enum = [
         'type' => ['containment','potential','implemented','preventive'],
         'status' => ['not started','on going', 'done']
@@ -29,5 +29,15 @@ class Action extends Model
     public function report(): BelongsTo
     {
         return $this->belongsTo(Report::class);
+    }
+
+    /**
+     * Get all of the comments for the Action
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(ActionComment::class);
     }
 }

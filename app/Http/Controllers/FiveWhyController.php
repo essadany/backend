@@ -90,4 +90,9 @@ class FiveWhyController extends Controller
             ],404);
         }
     }
+    public function getFiveWhyByClaim($claim_id){
+        $claim = Claim::find($claim_id);
+        $FiveWhy = $claim->five_why;
+        return $FiveWhy;
+    }
 }

@@ -32,6 +32,7 @@ class ActionController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
+            'report_id'=>'required',
             'user_id'=>'required',
             'action'=>'required', 
             'type'=>'required', 
@@ -76,7 +77,7 @@ class ActionController extends Controller
             $Action->type = $request->type;
             $Action->planned_date = $request->planned_date;
             $Action->start_date = $request->start_date;
-            $Action->status = $request->status;
+            $Action->status = $request->status?? 'not started';;
             $Action->done_date = $request->done_date;
             $Action->save();
             return response()->json([
@@ -116,10 +117,49 @@ class ActionController extends Controller
         }
     }
     //Get Activated Actions
-    public function getActivatedActions(){
+    public function getActivatedActions($report_id){
         $Actions = DB::table('actions')
-            ->where('actions.deleted',false)
-            ->select( 'actions.*')
+        ->join('reports', 'actions.report_id', '=', 'reports.id')
+        ->join('users', 'actions.user_id', '=', 'users.id')
+        ->where('actions.deleted',false)
+        ->where('actions.report_id',$report_id)
+            ->select( 'actions.*','users.name','users.fonction')
+            ->get();
+        return $Actions;
+    }
+    //Get Implemented Actions
+    public function getImplementedActions($report_id){
+        $Actions = DB::table('actions')
+        ->join('reports', 'actions.report_id', '=', 'reports.id')
+        ->join('users', 'actions.user_id', '=', 'users.id')
+        ->where('actions.type','implemented')
+        ->where('actions.deleted',false)
+        ->where('actions.report_id',$report_id)
+            ->select( 'actions.*','users.name','users.fonction')
+            ->get();
+        return $Actions;
+    }
+     //Get Preventive Actions
+     public function getPreventiveActions($report_id){
+        $Actions = DB::table('actions')
+        ->join('reports', 'actions.report_id', '=', 'reports.id')
+        ->join('users', 'actions.user_id', '=', 'users.id')
+        ->where('actions.type','preventive')
+        ->where('actions.report_id',$report_id)
+        ->where('actions.deleted',false)
+            ->select( 'actions.*','users.name','users.fonction')
+            ->get();
+        return $Actions;
+    }
+     //Get Implemented Actions
+     public function getPotentialActions($report_id){
+        $Actions = DB::table('actions')
+        ->join('reports', 'actions.report_id', '=', 'reports.id')
+        ->join('users', 'actions.user_id', '=', 'users.id')
+        ->where('actions.type','potential')
+        ->where('actions.report_id',$report_id)
+        ->where('actions.deleted',false)
+            ->select( 'actions.*','users.name','users.fonction')
             ->get();
         return $Actions;
     }

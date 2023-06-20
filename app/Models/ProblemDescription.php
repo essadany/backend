@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\belongsToMany;
 class ProblemDescription extends Model
 {
     use HasFactory;
-    protected $fillable = ['claim_id',
+    protected $fillable = [
                             'what',
                             'where',
                             'who',

@@ -29,7 +29,6 @@ class ProblemDescriptionController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'claim_id'=>'required',
             'what'=>'required',
             'where'=>'required',
             'who'=>'required',
@@ -78,7 +77,6 @@ class ProblemDescriptionController extends Controller
     {
         if(ProblemDescription::where('id',$id)->exists()){
             $ProblemDescription = ProblemDescription::find($id);
-            $ProblemDescription->claim_id = $request->claim_id;
             $ProblemDescription->what = $request->what;
             $ProblemDescription->where = $request->where;
             $ProblemDescription->who = $request->who;

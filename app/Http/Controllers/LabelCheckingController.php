@@ -31,6 +31,7 @@ class LabelCheckingController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
+            'claim_id'=>'required',
             'sorting_method'=>"required",
             'bontaz_plant'=>"required"
         ]);

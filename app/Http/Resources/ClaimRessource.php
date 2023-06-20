@@ -27,6 +27,7 @@ class ClaimRessource extends JsonResource
         'def_mode' => $this->def_mode,
         'nbr_claimed_parts' => $this->nbr_claimed_parts,
         'returned_parts' => $this->returned_parts,
+        'status'=>$this->status,
         'deleted'=>$this->deleted
     ];
     }

@@ -16,6 +16,7 @@ class LabelCheckingRessource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'claim_id'=>$this->claim_id,
             'sorting_method'=>$this->sorting_method, 
             'bontaz_plant'=>$this->bontaz_plant
         ];

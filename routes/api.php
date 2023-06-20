@@ -17,9 +17,9 @@ use App\Http\Controllers\UserController;
 use App\Models\Action;
 use App\Http\Resources\ActionRessource;
 use App\Http\Controllers\ActionController;
-use App\Models\ActionUser;
-use App\Http\Resources\ActionUserRessource;
-use App\Http\Controllers\ActionUserController;
+use App\Models\ActionComment;
+use App\Http\Resources\ActionCommentRessource;
+use App\Http\Controllers\ActionCommentController;
 use App\Models\Team;
 use App\Http\Resources\TeamRessource;
 use App\Http\Controllers\TeamController;
@@ -177,7 +177,10 @@ Route::get('/actions',function(){
 Route::get('action/{id}',function($id){
     return new ActionRessource(Action::findOrFail($id));
 });
-Route::get('/actions_activated',[ActionController::class, 'getActivatedActions']);
+Route::get('/actions_activated/{report_id}',[ActionController::class, 'getActivatedActions']);
+Route::get('/report/{report_id}/implemented_actions',[ActionController::class, 'getImplementedActions']);
+Route::get('/report/{report_id}/preventive_actions',[ActionController::class, 'getPreventiveActions']);
+Route::get('/report/{report_id}/potential_actions',[ActionController::class, 'getPotentialActions']);
 
 Route::post('/action',[ActionController::class, 'store']);
 
@@ -185,19 +188,21 @@ Route::put('/action/{id}',[ActionController::class, 'update']);
 Route::put('/action_disactivated/{id}',[ActionController::class, 'disactivate']);
 
 Route::delete('/action/{id}',[ActionController::class, 'destroy']);
-//--------------------------------------------ActionUser--------------------------------------------------------------------
-Route::get('/action_users',function(){
-    return ActionUserRessource::collection(ActionUser::all());
+//--------------------------------------------ActionComment--------------------------------------------------------------------
+Route::get('/action_comments',function(){
+    return ActionCommentRessource::collection(ActionComment::all());
 });
 
-Route::get('action_user/{id}',function($id){
-    return new ActionUserRessource(ActionUser::findOrFail($id));
+Route::get('action_comment/{id}',function($id){
+    return new ActionCommentRessource(ActionComment::findOrFail($id));
 });
-Route::post('/action_user',[ActionUserController::class, 'store']);
+Route::get('/action/{action_id}/comments',[ActionCommentController::class, 'getComments']);
 
-Route::put('/action_user/{id}',[ActionUserController::class, 'update']);
+Route::post('/action_comment',[ActionCommentController::class, 'store']);
 
-Route::delete('/action_user/{id}',[ActionUserController::class, 'destroy']);
+Route::put('/action_comment/{id}',[ActionCommentController::class, 'update']);
+
+Route::delete('/action_comment/{id}',[ActionCommentController::class, 'destroy']);
 //--------------------------------------------Team--------------------------------------------------------------------
 Route::get('/teams',function(){
     return TeamRessource::collection(Team::all());
@@ -258,7 +263,6 @@ Route::get('meeting_user/{id}',function($id){
 });
 Route::get('/meeting/{meeting_id}/absences', [MeetingUserController::class, 'getAbsences']);
 
-Route::post('/add_absence',[MeetingUserController::class, 'addAbsence']);
 
 Route::post('/meeting_user',[MeetingUserController::class, 'store']);
 
@@ -275,6 +279,8 @@ Route::get('/five_whys',function(){
 Route::get('five_why/{id}',function($id){
     return new FiveWhyRessource(FiveWhy::findOrFail($id));
 });
+Route::get('/claim/{claim_id}/five_why',[FiveWhyController::class, 'getFiveWhyByClaim']);
+
 Route::post('/five_why',[FiveWhyController::class, 'store']);
 
 Route::put('/five_why/{id}',[FiveWhyController::class, 'update']);
@@ -289,6 +295,8 @@ Route::get('/results',function(){
 Route::get('result/{id}',function($id){
     return new ResultRessource(Result::findOrFail($id));
 });
+Route::get('/claim/{claim_id}/results',[ResultController::class, 'getResultsByClaim']);
+
 Route::post('/result',[ResultController::class, 'store']);
 
 Route::put('/result/{id}',[ResultController::class, 'update']);
@@ -302,6 +310,8 @@ Route::get('/five_lignes',function(){
 Route::get('five_ligne/{id}',function($id){
     return new FiveLigneRessource(FiveLigne::findOrFail($id));
 });
+Route::get('/claim/{claim_id}/five_lignes',[FiveLigneController::class, 'getFiveLignesByClaim']);
+
 Route::post('/five_ligne',[FiveLigneController::class, 'store']);
 
 Route::put('/five_ligne/{id}',[FiveLigneController::class, 'update']);
@@ -315,7 +325,7 @@ Route::get('/label_checkings',function(){
 Route::get('label_checking/{id}',function($id){
     return new LabelCheckingRessource(LabelChecking::findOrFail($id));
 });
-Route::get('/label_checking_join/{claim_id}',[LabelCheckingController::class, 'getLabelCheckJoin']);
+Route::get('/claim/{claim_id}/label_checking_join',[LabelCheckingController::class, 'getLabelCheckJoin']);
 
 Route::post('/label_checking',[LabelCheckingController::class, 'store']);
 

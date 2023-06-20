@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\FiveLigne;
+use App\Models\Claim;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class FiveLigneController extends Controller
@@ -94,5 +96,10 @@ class FiveLigneController extends Controller
                 'message' => 'FiveLigne Record Not Found'
             ],404);
         }
+    }
+    public function getFiveLignesByClaim($claim_id){
+        $claim = Claim::find($claim_id);
+        $five_lignes = $claim->five_why->five_lignes()->get();
+        return $five_lignes;
     }
 }

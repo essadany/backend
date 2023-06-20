@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Result;
+use App\Models\Claim;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class ResultController extends Controller
@@ -92,5 +93,10 @@ class ResultController extends Controller
                 'message' => 'Result Record Not Found'
             ],404);
         }
+    }
+    public function getResultsByClaim($claim_id){
+        $claim = Claim::find($claim_id);
+        $results = $claim->five_why->results()->get();
+        return $results;
     }
 }

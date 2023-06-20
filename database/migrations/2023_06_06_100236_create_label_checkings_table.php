@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('claim_id')->unsigned();
             $table->string('sorting_method')->nullable();
-            $table->enum('bontaz_plant',['El Jadia','Shanghai','Marnaz','Fouchana', 'Velka Dobra','Viana Do Casteo','Troy','Pingamonhangaba-sp'])->nullable();
+            $table->enum('bontaz_plant',['El Jadida','Shanghai','Marnaz','Fouchana', 'Velka Dobra','Viana Do Casteo','Troy','Pingamonhangaba-sp'])->nullable();
             $table->timestamps();
 
             $table->foreign('claim_id')->references('id')->on('claims')

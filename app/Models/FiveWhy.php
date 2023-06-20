@@ -16,4 +16,22 @@ class FiveWhy extends Model
     {
         return $this->belongsTo(Claim::class);
     }
+    /**
+     * Get all of the results for the FiveWhy
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function results()
+    {
+        return $this->hasMany(Result::class);
+    }
+    /**
+     * Get all of the five_lignes for the FiveWhy
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function five_lignes()
+    {
+        return $this->hasMany(FiveLigne::class);
+    }
 }

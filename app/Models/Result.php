@@ -15,4 +15,14 @@ class Result extends Model
     protected $enum = [
         'type'=>['occurence','detection','system']
     ];
+
+    /**
+     * Get the five_why that owns the Result
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function five_why()
+    {
+        return $this->belongsTo(FiveWhy::class);
+    }
 }

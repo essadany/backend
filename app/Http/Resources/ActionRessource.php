@@ -15,6 +15,7 @@ class ActionRessource extends JsonResource
     public function toArray(Request $request): array
     {
         return ['id'=>$this->id,
+            'report_id'=>$this->report_id,
             'user_id'=>$this->user_id,
             'action'=>$this->action,
             'type'=>$this->type,
