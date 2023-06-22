@@ -18,26 +18,20 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
+        $credentials = $request->only('email', 'password');
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (Auth::guard('session')->attempt($credentials)) {
+            // Authentication successful
+            return response()->json(['message' => 'Login successful']);
+        } else {
+            // Authentication failed
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
-
-        return $this->respondWithToken($token);
     }
 
-    public function register()
-    {
-        $credentials = request(['name','email', 'password']);
-        $credentials['password'] = bcrypt($credentials['password']);
-        User::create($credentials);
-
-        return response()->json('success');
-    }
-
+  
 
 
     /**

@@ -26,6 +26,11 @@ class ProblemDescription extends Model
                             'description'      
 ];
     protected $table = 'problem_descriptions';
+    protected $attributes = [
+        'recurrence' => false,
+        'received'=>false,
+        'bontaz_fault'=>false
+    ];
 
     public function claim()
     {

@@ -29,9 +29,7 @@ class ImageController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'name'=>'required',
-            'type'=>'required',
-            'bloob'=>'required',  
+            'path'=>'required',
             'isGood'=>'', 
             'description'=>'',
             'report_id'=>'',
@@ -71,10 +69,8 @@ class ImageController extends Controller
     {
         if(Image::where('id',$id)->exists()){
             $Image = Image::find($id);
-            $Image->name = $request->name;
             $Image->report_id = $request->report_id;
-            $Image->type = $request->type;
-            $Image->bloob = $request->bloob;
+            $Image->path = $request->path;
             $Image->isGood = $request->isGood;
             $Image->description = $request->description;
             $Image->annexe_id = $request->annexe_id;
@@ -103,4 +99,24 @@ class ImageController extends Controller
             ],404);
         }
     }
+    public function uploadImage(Request $request)
+    {
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images'), $imageName);
+
+        // Save the image path in the database
+        $imagePath = '/images/' . $imageName;
+        DB::table('images')->insert([
+        'image_path' => $imagePath,
+        ]);
+
+        return response()->json(['imagePath' => $imagePath]);
+    }
+
+    return response()->json(['message' => 'No image uploaded.'], 400);
+    }
+
+
 }

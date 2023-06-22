@@ -22,11 +22,11 @@ return new class extends Migration
             $table->string('how')->nullable();
             $table->integer('how_many_before')->nullable();
             $table->integer('how_many_after')->nullable();
-            $table->boolean('recurrence')->nullable();
-            $table->boolean('received')->nullable();
+            $table->boolean('recurrence')->default(false);
+            $table->boolean('received')->default(false);
             $table->date('date_reception')->nullable();
             $table->date('date_done')->nullable();
-            $table->boolean('bontaz_fault')->nullable();
+            $table->boolean('bontaz_fault')->default(false);
             $table->string('description')->nullable();
             $table->timestamps();
 

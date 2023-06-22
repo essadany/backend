@@ -139,6 +139,8 @@ Route::get('/claim/{id}/five_why',[ClaimController::class, 'getFiveWhyByClaim'])
 Route::get('/claim/{id}/label_checking',[ClaimController::class, 'getLabelCheckByClaim']);
 Route::get('/claim/{id}/actions',[ClaimController::class, 'getActionsByClaim']);
 Route::get('/claim/{id}/problem_description',[ClaimController::class, 'getProbDescByClaim']);
+Route::get('/claim/{id}/label_checking_join',[ClaimController::class, 'getLabelCheckJoin']);
+Route::get('/claim/{id}/report_join',[ClaimController::class, 'getReportJoin']);
 
 Route::get('/claims_activated',[ClaimController::class, 'getActivatedClaims']);
 Route::get('/claim/{id}/team_users',[ClaimController::class, 'getUsersOfTeam']);
@@ -149,6 +151,7 @@ Route::post('/claim',[ClaimController::class, 'store']);
 
 Route::put('/claim/{id}',[ClaimController::class, 'update']);
 Route::put('/claim_disactivated/{id}',[ClaimController::class, 'disactivate']);
+Route::put('/claim_status/{id}',[ClaimController::class, 'updateStatus']);
 
 Route::delete('/claim/{id}',[ClaimController::class, 'destroy']);
 
@@ -181,6 +184,7 @@ Route::get('/actions_activated/{report_id}',[ActionController::class, 'getActiva
 Route::get('/report/{report_id}/implemented_actions',[ActionController::class, 'getImplementedActions']);
 Route::get('/report/{report_id}/preventive_actions',[ActionController::class, 'getPreventiveActions']);
 Route::get('/report/{report_id}/potential_actions',[ActionController::class, 'getPotentialActions']);
+
 
 Route::post('/action',[ActionController::class, 'store']);
 
@@ -300,7 +304,7 @@ Route::get('/claim/{claim_id}/results',[ResultController::class, 'getResultsByCl
 Route::post('/result',[ResultController::class, 'store']);
 
 Route::put('/result/{id}',[ResultController::class, 'update']);
-
+Route::put('/results/{five_why_id}',[ResultController::class, 'updateFiveWhyResults']);
 Route::delete('/result/{id}',[ResultController::class, 'destroy']);
 //--------------------------------------------FiveLigne--------------------------------------------------------------------
 Route::get('/five_lignes',function(){
@@ -325,7 +329,6 @@ Route::get('/label_checkings',function(){
 Route::get('label_checking/{id}',function($id){
     return new LabelCheckingRessource(LabelChecking::findOrFail($id));
 });
-Route::get('/claim/{claim_id}/label_checking_join',[LabelCheckingController::class, 'getLabelCheckJoin']);
 
 Route::post('/label_checking',[LabelCheckingController::class, 'store']);
 
@@ -376,6 +379,8 @@ Route::get('image/{id}',function($id){
 Route::post('/image',[ImageController::class, 'store']);
 
 Route::put('/image/{id}',[ImageController::class, 'update']);
+
+Route::post('/upload_image',[ImageController::class, 'uploadImage']);
 
 Route::delete('/image/{id}',[ImageController::class, 'destroy']);
 
@@ -471,7 +476,7 @@ Route::delete('/effectiveness/{id}',[EffectivenessController::class, 'destroy'])
 
 
 
-Route::post('login', [UserController::class,'login']);
+Route::post('/login', [AuthController::class,'login']);
 
 
 Route::group(['middleware'=>'api'],function(){

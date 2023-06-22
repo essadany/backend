@@ -5,6 +5,8 @@ use App\Models\Claim;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Containement;
+use App\Models\Result;
+use Carbon\Carbon;
 
 use App\Models\ProblemDescription;
 use App\Models\Report;
@@ -63,6 +65,9 @@ class ClaimController extends Controller
     //--------------------
     //Create associated report
     $report = new Report();
+    $openingDate = Carbon::parse($Claim->opening_date);
+    $dueDate = $openingDate->addDays(28);
+    $report->due_date = $dueDate;
     $Claim->report()->save($report);
     //--------------------
     //Create associated containement
@@ -80,6 +85,16 @@ class ClaimController extends Controller
     //Create associated FiveWhy
     $five_why = new FiveWhy();
     $Claim->five_why()->save($five_why);
+    //Create associated Results to FiveWhy
+    $occurence_result = new Result();
+    $detection_result = new Result();
+    $system_result = new Result();
+    $occurence_result->type = "occurence";
+    $detection_result->type = "detection";
+    $system_result->type = "system";
+    // Save the results and associate them with the FiveWhy
+    $five_why->results()->saveMany([$occurence_result, $detection_result, $system_result]);
+    
     //--------------------
     //Create associated LabelChecking
     $label = new LabelChecking();
@@ -126,6 +141,19 @@ class ClaimController extends Controller
             $Claim->def_mode = $request->def_mode;
             $Claim->nbr_claimed_parts = $request->nbr_claimed_parts;
             $Claim->returned_parts = $request->returned_parts;
+            $Claim->save();
+            return response()->json([
+                'message'=>'Claim Record Updated Successfully'
+            ],);
+        }
+    }
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        if(Claim::where('id',$id)->exists()){
+            $Claim = Claim::find($id);
             $Claim->status = $request->status?? 'not started';
             $Claim->save();
             return response()->json([
@@ -233,6 +261,39 @@ class ClaimController extends Controller
         $report = $Claim->report;
         $actions = $report->actions()->get() ;
         return response()->json($actions);
+    }
+    public function getLabelCheckJoin($claim_id){
+        $label_check = DB::table('label_checkings')
+        ->join('claims', 'claims.id', '=', 'label_checkings.claim_id')
+        ->where('claims.id',$claim_id)
+        ->join('products','products.product_ref','=','claims.product_ref')
+        ->select('label_checkings.id', 'products.product_ref','internal_ID','customer_ref','sorting_method','bontaz_plant')
+        ->get()->first();
+        return $label_check;
+    }
+    public function getReportJoin($claim_id){
+        $claim= Claim::find($claim_id);
+        $report = DB::table('claims')
+        ->where('claims.id', $claim_id)
+        ->join('reports', 'claims.id', 'reports.claim_id')
+        ->join('problem_descriptions', 'problem_descriptions.claim_id', '=', 'claims.id')
+        ->join('five_whys', 'five_whys.claim_id', '=', 'claims.id')
+        ->join('results as r1', function ($join) {
+            $join->on('five_whys.id', '=', 'r1.five_why_id')
+                ->where('r1.type', 'occurence');
+        })
+        ->join('results as r2', function ($join) {
+            $join->on('five_whys.id', '=', 'r2.five_why_id')
+                ->where('r2.type', 'detection');
+        })
+        ->join('results as r3', function ($join) {
+            $join->on('five_whys.id', '=', 'r3.five_why_id')
+                ->where('r3.type', 'system');
+        })
+        ->select('reports.*','opening_date','engraving','prod_date as production_date', 'what', 'recurrence', 'bontaz_fault', 'r1.input as occurrence_root_cause', 'r2.input as detection_root_cause',
+                 'r3.input as system_root_cause')
+        ->get()->first();
+        return $report;
     }
     
     

@@ -19,7 +19,7 @@ class ReportRessource extends JsonResource
             'report_ref'=>$this->report_ref,
             'due_date'=>$this->due_date,
             'sub_date'=>$this->sub_date,
-            'contianement_actions'=>$this->contianement_actions,
+            'containement_actions'=>$this->containement_actions,
             'first_batch3'=>$this->first_batch3,
             'first_batch6'=>$this->first_batch6,
             'date_cause_definition'=>$this->date_cause_definition,

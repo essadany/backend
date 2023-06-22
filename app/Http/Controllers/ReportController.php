@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\Report;
+use App\Models\Claim;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 class ReportController extends Controller
 {
     
@@ -34,7 +38,7 @@ class ReportController extends Controller
             'report_ref'=>'required',
             'due_date'=>'required',
             'sub_date'=>'',
-            'contianement_actions'=>'required',
+            'containement_actions'=>'required',
             'first_batch3'=>'required',
             'first_batch6'=>'required',
             'date_cause_definition'=>'required',
@@ -80,11 +84,10 @@ class ReportController extends Controller
     public function update(Request $request, $id)
     {
         if(Report::where('id',$id)->exists()){
-            $Report = Report::find($id);
-            $report->reference = $request->reference;
-            $report->due_date = $request->due_date;
+            $report = Report::find($id);
             $report->sub_date = $request->sub_date;
-            $report->contianement_actions = $request->contianement_actions;
+            $report->due_date = $request->due_date;
+            $report->containement_actions = $request->containement_actions;
             $report->first_batch3 = $request->first_batch3;
             $report->first_batch6 = $request->first_batch6;
             $report->date_cause_definition = $request->date_cause_definition;
@@ -97,11 +100,7 @@ class ReportController extends Controller
             $report->pfmea = $request->pfmea;
             $report->dfmea = $request->dfmea;
             $report->progress_rate = $request->progress_rate;
-            $Report->customer_ref = $request->customer_ref;
-            $Report->name = $request->name;
-            $Report->zone = $request->zone;
-            $Report->uap = $request->uap;
-            $Report->save();
+            $report->save();
             return response()->json([
                 'message'=>'Report Record Updated Successfully'
             ],);
@@ -125,4 +124,5 @@ class ReportController extends Controller
             ],404);
         }
     }
+    
 }

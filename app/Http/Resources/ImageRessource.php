@@ -16,12 +16,10 @@ class ImageRessource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'path'=>$this->path,
             'report_id'=>$this->report_id,
             'annexe_id'=>$this->annexe_id,
             'label_check_id'=>$this->label_check_id,
-            'name'=>$this->name,
-            'type'=>$this->type,
-            'bloob'=>$this->bloob,
             'isGood'=>$this->isGood,
             'description'=>$this->description,
         ];

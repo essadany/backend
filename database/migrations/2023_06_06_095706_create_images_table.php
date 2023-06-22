@@ -17,9 +17,7 @@ return new class extends Migration
             $table->integer('report_id')->unsigned();
             $table->integer('annexe_id')->unsigned();
             $table->integer('label_check_id')->unsigned();
-            $table->string('name')->nullable();
-            $table->string('type')->nullable();
-            $table->string('bloob');
+            $table->string('path')->nullable();
             $table->boolean('isGood')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
@@ -31,6 +29,9 @@ return new class extends Migration
             ->cascadeOnUpdate()
             ;
             $table->foreign('annexe_id')->references('id')->on('annexes')
+            ->cascadeOnUpdate()
+            ;
+            $table->foreign('label_check_id')->references('id')->on('label_checkings')
             ->cascadeOnUpdate()
             ;
 

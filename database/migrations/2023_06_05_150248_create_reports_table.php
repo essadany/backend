@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('claim_id')->unsigned();
             $table->date('due_date')->nullable();
             $table->date('sub_date')->nullable();
-            $table->string('contianement_actions')->nullable();
+            $table->string('containement_actions')->nullable();
             $table->string('first_batch3')->nullable();
             $table->string('first_batch6')->nullable();
             $table->date('date_cause_definition')->nullable();

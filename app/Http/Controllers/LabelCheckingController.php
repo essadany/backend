@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\LabelChecking;
+use App\Models\Claim;
+
+use App\Models\Product;
+
+use App\Models\Customer;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -94,14 +100,6 @@ class LabelCheckingController extends Controller
             ],404);
         }
     }
-    public function getLabelCheckJoin($claim_id){
-        $label_check = DB::table('label_checkings')
-        ->join('claims', 'claims.id', '=', 'label_checkings.claim_id')
-        ->where('claims.id',$claim_id)
-        ->join('products','products.product_ref','=','claims.product_ref')
-        ->select('label_checkings.id', 'products.product_ref','internal_ID','customer_ref','sorting_method','bontaz_plant')
-        ->get();
-    return $label_check;
-    }
+    
     
 }

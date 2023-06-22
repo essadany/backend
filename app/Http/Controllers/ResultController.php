@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Result;
 use App\Models\Claim;
+use App\Models\FiveWhy;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class ResultController extends Controller
@@ -67,8 +69,6 @@ class ResultController extends Controller
     {
         if(Result::where('id',$id)->exists()){
             $Result = Result::find($id);
-            $Result->five_why_id = $request->five_why_id;
-            $Result->type = $request->type;
             $Result->input = $request->input;
             $Result->save();
             return response()->json([
@@ -99,4 +99,8 @@ class ResultController extends Controller
         $results = $claim->five_why->results()->get();
         return $results;
     }
+
+    
+    
+
 }

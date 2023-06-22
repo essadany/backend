@@ -10,10 +10,10 @@ class Report extends Model
 {
     use HasFactory;
     protected $table = 'reports';
-    protected $fillable = ['report_ref',
+    protected $fillable = [
     'due_date',
     'sub_date',
-    'contianement_actions',
+    'containement_actions',
     'first_batch3',
     'first_batch6',
     'date_cause_definition',
