@@ -22,13 +22,26 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $accessToken = $user->createToken('authToken')->accessToken;
+
+            return response()->json([
+                'user' => $user,
+                'access_token' => $accessToken,
+            ]);
+        } else {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+       /* $credentials = $request->only('email', 'password');
+
         if (Auth::guard('session')->attempt($credentials)) {
             // Authentication successful
             return response()->json(['message' => 'Login successful']);
         } else {
             // Authentication failed
             return response()->json(['message' => 'Invalid credentials'], 401);
-        }
+        }*/
     }
 
   

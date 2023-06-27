@@ -480,9 +480,9 @@ Route::post('/login', [AuthController::class,'login']);
 
 
 Route::group(['middleware'=>'api'],function(){
-    Route::post('logout', [UserController::class,'logout']);
-    Route::post('refresh', [UserController::class,'refresh']);
-    Route::post('me', [UserController::class,'me']);
+    Route::post('logout', [AuthController::class,'logout']);
+    Route::post('refresh', [AuthController::class,'refresh']);
+    Route::get('me', [AuthController::class,'me']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
