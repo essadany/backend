@@ -14,10 +14,10 @@ class Claim extends Model
     'opening_date', 'final_cusomer', 'claim_details', 'def_mode',
     'nbr_claimed_parts', 'returned_parts'];
     protected $enum = [
-        'status' => ['not started','on going', 'done']
+        'status' => ['on going', 'done','delayed']
     ];
     protected $attributes = [
-        'status' => 'not started',
+        'status' => 'on going',
         'deleted'=>false
     ];
     protected $table = 'claims';

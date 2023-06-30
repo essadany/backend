@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('def_mode')->nullable();
             $table->integer('nbr_claimed_parts');
             $table->date('returned_parts')->nullable();
-            $table->enum('status',['not started','on going', 'done'])->default('not started');
+            $table->enum('status',['on going', 'done','delayed'])->default('on going');
             $table->boolean("deleted")->default(false);
             $table->timestamps();
 

@@ -184,12 +184,14 @@ Route::get('/actions_activated/{report_id}',[ActionController::class, 'getActiva
 Route::get('/report/{report_id}/implemented_actions',[ActionController::class, 'getImplementedActions']);
 Route::get('/report/{report_id}/preventive_actions',[ActionController::class, 'getPreventiveActions']);
 Route::get('/report/{report_id}/potential_actions',[ActionController::class, 'getPotentialActions']);
+Route::get('/user/{user_id}/actions_join_claims',[ActionController::class, 'getActions_join_claims']);
 
 
 Route::post('/action',[ActionController::class, 'store']);
 
 Route::put('/action/{id}',[ActionController::class, 'update']);
 Route::put('/action_disactivated/{id}',[ActionController::class, 'disactivate']);
+Route::put('/action/{id}/update_status',[ActionController::class, 'updateStatus']);
 
 Route::delete('/action/{id}',[ActionController::class, 'destroy']);
 //--------------------------------------------ActionComment--------------------------------------------------------------------

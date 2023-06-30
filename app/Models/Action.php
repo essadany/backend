@@ -12,7 +12,7 @@ class Action extends Model
     protected $fillable = ['report_id', 'user_id','action','type', 'status','planned_date', 'start_date', 'done_date'];
     protected $enum = [
         'type' => ['containment','potential','implemented','preventive'],
-        'status' => ['not started','on going', 'done']
+        'status' => ['not started','on going', 'done','delayed']
     ];
     protected $attributes = [
         'type' => 'containment',

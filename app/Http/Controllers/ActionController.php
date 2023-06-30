@@ -116,6 +116,20 @@ class ActionController extends Controller
             ],);
         }
     }
+     //Update Status
+     public function updateStatus(Request $request, $id)
+     {
+         if(Action::where('id',$id)->exists()){
+             $Action = Action::find($id);
+             $Action->status = $request->status;
+             $Action->start_date = $request->start_date;
+             $Action->done_date = $request->done_date;
+             $Action->save();
+             return response()->json([
+                 'message'=>'Status Record Updated Successfully'
+             ],);
+         }
+     }
     //Get Activated Actions
     public function getActivatedActions($report_id){
         $Actions = DB::table('actions')
@@ -160,6 +174,18 @@ class ActionController extends Controller
         ->where('actions.report_id',$report_id)
         ->where('actions.deleted',false)
             ->select( 'actions.*','users.name','users.fonction')
+            ->get();
+        return $Actions;
+    }
+    //Get Implemented Actions
+    public function getActions_join_claims($user_id){
+        $Actions = DB::table('actions')
+        ->join('reports', 'actions.report_id', '=', 'reports.id')
+        ->join('claims', 'claims.id', '=', 'reports.claim_id')
+        ->join('users', 'users.id', '=', 'actions.user_id')
+        ->where('actions.deleted',false)
+        ->where('actions.user_id',$user_id)
+            ->select( 'actions.*','claims.internal_ID')
             ->get();
         return $Actions;
     }
