@@ -136,6 +136,8 @@ Route::get('/claim/{id}/team',[ClaimController::class, 'getTeamByClaim']);
 Route::get('/claim/{id}/containement',[ClaimController::class, 'getContainementByClaim']);
 Route::get('/claim/{id}/report',[ClaimController::class, 'getReportByClaim']);
 Route::get('/claim/{id}/five_why',[ClaimController::class, 'getFiveWhyByClaim']);
+Route::get('/claim/{id}/ishikawa',[ClaimController::class, 'getIshikawa']);
+
 Route::get('/claim/{id}/label_checking',[ClaimController::class, 'getLabelCheckByClaim']);
 Route::get('/claim/{id}/actions',[ClaimController::class, 'getActionsByClaim']);
 Route::get('/claim/{id}/problem_description',[ClaimController::class, 'getProbDescByClaim']);
@@ -167,6 +169,7 @@ Route::get('user/{id}',function($id){
 Route::get('/users_activated',[UserController::class, 'getActivatedUsers']);
 
 Route::post('/user',[UserController::class, 'store']);
+Route::post('/send_email/{id}',[UserController::class, 'sendEmail']);
 
 Route::put('/user/{id}',[UserController::class, 'update']);
 Route::put('/user_disactivated/{id}',[UserController::class, 'disactivate']);
@@ -363,6 +366,8 @@ Route::get('/categories',function(){
 Route::get('category/{id}',function($id){
     return new CategoryRessource(Category::findOrFail($id));
 });
+Route::get('/ishikawa/{ishikawa_id}/categories',[CategoryController::class, 'getCategories']);
+
 Route::post('/category',[CategoryController::class, 'store']);
 
 Route::put('/category/{id}',[CategoryController::class, 'update']);

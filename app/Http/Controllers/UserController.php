@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
 
 class UserController extends Controller
 {
@@ -129,4 +131,21 @@ class UserController extends Controller
             ->get();
         return $Users;
     }
+    public function sendEmail($id)
+{   
+    $user = User::find($id);
+    
+   
+    $mailData = [
+        'title' => 'Send mail from Nicesnippets.com',
+        'body' => 'This is for testing email using smtp.'
+    ];
+     
+    Mail::to('yassineessaadani20@gmail.com')->send(new SendMail($mailData));
+       
+    dd("Email is sent successfully.");
+
+    return response()->json(['message' => 'Email sent successfully']);
+}
+
 }

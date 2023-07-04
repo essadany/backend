@@ -251,6 +251,11 @@ class ClaimController extends Controller
         $five_why = $Claim->five_why ;
         return response()->json($five_why);
     }
+    public function getIshikawa($id){
+        $Claim = Claim::find($id);
+        $ishikawa = $Claim->ishikawa ;
+        return response()->json($ishikawa);
+    }
     public function getLabelCheckByClaim($id){
         $Claim = Claim::find($id);
         $label_checking = $Claim->label_checking ;

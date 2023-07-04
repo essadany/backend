@@ -24,4 +24,13 @@ class Category extends Model
     protected $attributes = [
         'isPrincipale' => false
     ];
+    /**
+     * Get the ishikawa that owns the Category
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ishikawa()
+    {
+        return $this->belongsTo(Ishikawa::class);
+    }
 }

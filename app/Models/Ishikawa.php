@@ -16,4 +16,13 @@ class Ishikawa extends Model
     {
         return $this->belongsTo(Claim::class);
     }
+    /**
+     * Get all of the categories for the Ishikawa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
 }

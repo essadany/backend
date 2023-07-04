@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\Category;
+use App\Models\Ishikawa;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class CategoryController extends Controller
@@ -70,14 +72,13 @@ class CategoryController extends Controller
     {
         if(Category::where('id',$id)->exists()){
             $Category = Category::find($id);
-            $Category->report_id = $request->report_id;
             $Category -> ishikawa_id = $request ->ishikawa_id;
             $Category -> type = $request ->type;
             $Category -> input = $request ->input;
             $Category -> isPrincipale = $request ->isPrincipale;
             $Category -> status = $request ->status;
             $Category -> influence = $request ->influence;
-            $Category -> comment = $request ->commen;
+            $Category -> comment = $request ->comment;
             $Category->save();
             return response()->json([
                 'message'=>'Category Record Updated Successfully'
@@ -101,5 +102,10 @@ class CategoryController extends Controller
                 'message' => 'Category Record Not Found'
             ],404);
         }
+    }
+    public function getCategories($id){
+        $ishikawa = Ishikawa :: find($id);
+        $categories = $ishikawa->categories()->get();
+        return response()->json($categories); 
     }
 }
