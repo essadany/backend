@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 use App\Models\ActionComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-class AnnexeController extends Controller
+class ActionCommentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Annexe::all();
+        return ActionComment::all();
     }
 
     /**
@@ -36,11 +36,11 @@ class AnnexeController extends Controller
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
-    $Annexe = Annexe::create($input);
+    $Comment = ActionComment::create($input);
     return response()->json([ 
         'success'=>true,
-        'message'=> 'Annexe Record Created Successfully',
-        'Annexe'=>$Annexe
+        'message'=> 'ActionComment Record Created Successfully',
+        'ActionComment'=>$Comment
     ]);
     }
     /**
@@ -48,7 +48,7 @@ class AnnexeController extends Controller
      */
     public function show(string $id)
     {
-        return Annexe::find($id);
+        return ActionComment::find($id);
     }
 
     /**
@@ -64,14 +64,14 @@ class AnnexeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Annexe::where('id',$id)->exists()){
-            $Annexe = Annexe::find($id);
-            $Annexe->action_id = $request->action_id;
-            $Annexe->comment = $request->comment;
-            $Annexe->comment_date = $request->comment_date;
-            $Annexe->save();
+        if(ActionComment::where('id',$id)->exists()){
+            $ActionComment = ActionComment::find($id);
+            $ActionComment->action_id = $request->action_id;
+            $ActionComment->comment = $request->comment;
+            $ActionComment->comment_date = $request->comment_date;
+            $ActionComment->save();
             return response()->json([
-                'message'=>'Annexe Record Updated Successfully'
+                'message'=>'ActionComment Record Updated Successfully'
             ],);
         }
     }
@@ -81,15 +81,15 @@ class AnnexeController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Annexe::where("id",$id)->exists()){
-            $Annexe = Annexe::find($id);
-            $Annexe->delete();
+        if(ActionComment::where("id",$id)->exists()){
+            $ActionComment = ActionComment::find($id);
+            $ActionComment->delete();
             return response()->json([
-                'message' => 'Annexe Record Deleted Successfully'
+                'message' => 'ActionComment Record Deleted Successfully'
             ], 200);
         }else{
             return response()->json([
-                'message' => 'Annexe Record Not Found'
+                'message' => 'ActionComment Record Not Found'
             ],404);
         }
     }
