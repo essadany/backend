@@ -320,6 +320,9 @@ Route::get('five_ligne/{id}',function($id){
     return new FiveLigneRessource(FiveLigne::findOrFail($id));
 });
 Route::get('/claim/{claim_id}/five_lignes',[FiveLigneController::class, 'getFiveLignesByClaim']);
+Route::get('/claim/{claim_id}/five_lignes_detection',[FiveLigneController::class, 'getFiveLignesDetection']);
+Route::get('/claim/{claim_id}/five_lignes_occurence',[FiveLigneController::class, 'getFiveLignesOccurence']);
+Route::get('/claim/{claim_id}/five_lignes_system',[FiveLigneController::class, 'getFiveLignesSystem']);
 
 Route::post('/five_ligne',[FiveLigneController::class, 'store']);
 

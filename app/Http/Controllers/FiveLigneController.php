@@ -69,8 +69,6 @@ class FiveLigneController extends Controller
     {
         if(FiveLigne::where('id',$id)->exists()){
             $FiveLigne = FiveLigne::find($id);
-            $FiveLigne->five_why_id = $request->five_why_id;
-            $FiveLigne->type = $request->type;
             $FiveLigne->why = $request->why;
             $FiveLigne->answer = $request->answer;
             $FiveLigne->save();
@@ -100,6 +98,27 @@ class FiveLigneController extends Controller
     public function getFiveLignesByClaim($claim_id){
         $claim = Claim::find($claim_id);
         $five_lignes = $claim->five_why->five_lignes()->get();
+        return $five_lignes;
+    }
+    public function getFiveLignesOccurence($claim_id){
+        $claim = Claim::find($claim_id);
+        $five_lignes = $claim->five_why->five_lignes()
+        ->where('five_lignes.type','occurence')
+        ->get();
+        return $five_lignes;
+    }
+    public function getFiveLignesDetection($claim_id){
+        $claim = Claim::find($claim_id);
+        $five_lignes = $claim->five_why->five_lignes()
+        ->where('five_lignes.type','detection')
+        ->get();
+        return $five_lignes;
+    }
+    public function getFiveLignesSystem($claim_id){
+        $claim = Claim::find($claim_id);
+        $five_lignes = $claim->five_why->five_lignes()
+        ->where('five_lignes.type','system')
+        ->get();
         return $five_lignes;
     }
 }
