@@ -12,4 +12,14 @@ class Annexe extends Model
     protected $fillable = [
         'report_id'
     ];
+
+    /**
+     * Get the report that owns the Annexe
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function report(): BelongsTo
+    {
+        return $this->belongsTo(Report::class);
+    }
 }

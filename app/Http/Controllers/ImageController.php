@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 use App\Models\Image;
+use App\Models\LabelChecking;
+use App\Models\ProblemDescription;
+use App\Models\Report;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
+
 class ImageController extends Controller
 {
     /**
@@ -33,8 +40,9 @@ class ImageController extends Controller
             'isGood'=>'', 
             'description'=>'',
             'report_id'=>'',
+            'problem_id'=>'',
             'annexe_id'=>'',
-            'label_check_id'=>''
+            'label_checking_id'=>''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -66,21 +74,34 @@ class ImageController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        if(Image::where('id',$id)->exists()){
-            $Image = Image::find($id);
-            $Image->report_id = $request->report_id;
-            $Image->path = $request->path;
-            $Image->isGood = $request->isGood;
-            $Image->description = $request->description;
-            $Image->annexe_id = $request->annexe_id;
-            $Image->label_check_id = $request->label_check_id;
-            $Image->save();
-            return response()->json([
-                'message'=>'Image Record Updated Successfully'
-            ],);
+{
+    $image = Image::find($id);
+    if ($image) {
+        $image->isGood = $request->input('isGood');
+        $image->description = $request->input('description');
+
+        // Check if the user has uploaded a new image file
+        if ($request->hasFile('path')) {
+            // Delete the old image file
+            Storage::delete($image->path);
+
+            // Store the new image file
+            $newPath = $request->file('path')->store('images');
+            $image->update([
+                'path' => $newPath,
+            ]);
         }
+        $image->save();
+
+        return response()->json([
+            'message' => 'Image Record Updated Successfully'
+        ]);
+    } else {
+        return response()->json([
+            'message' => 'Image Record Not Found'
+        ], 404);
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -89,6 +110,7 @@ class ImageController extends Controller
     {
         if(Image::where("id",$id)->exists()){
             $Image = Image::find($id);
+            Storage::delete($image->path);
             $Image->delete();
             return response()->json([
                 'message' => 'Image Record Deleted Successfully'
@@ -99,23 +121,52 @@ class ImageController extends Controller
             ],404);
         }
     }
-    public function uploadImage(Request $request)
-    {
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images'), $imageName);
+    public function getImageOfLabelChecking($label_id){
+        $label = LabelChecking :: find($label_id);
+        if ($label !== null && $label->image !== null) {
+            $image = $label->image;
+            $image->path = asset('/' . $image->path);
+            return response()->json($image);
+        } else {
+            // Handle the case when $label or $label->image is null
+            // You can return an appropriate response or perform error handling
+        }
+    }
+    public function getImgagesOfProblemDescription($id){
+        $problem = ProblemDescription :: find($id);
+        $images = $problem->images()->get();
+        foreach($images as $image){
+            $image->path = asset('/' . $image->path);
 
-        // Save the image path in the database
-        $imagePath = '/images/' . $imageName;
-        DB::table('images')->insert([
-        'image_path' => $imagePath,
-        ]);
+        }
 
-        return response()->json(['imagePath' => $imagePath]);
+        return response()->json($images);
+    }
+    public function getImgagesOfReport($id){
+        $report = Report :: find($id);
+        $images = $report->images()->get();
+        foreach($images as $image){
+            $image->path = asset('/' . $image->path);
+
+        }
+
+        return response()->json($images);
     }
 
-    return response()->json(['message' => 'No image uploaded.'], 400);
+    public function addImage(Request $request){
+        $image = new Image();
+        $image->isGood=$request->input('isGood');
+        $image->report_id=$request->input('report_id');
+        $image->problem_id=$request->input('problem_id');
+        $image->description=$request->input('description');
+        $image->annexe_id=$request->input('annexe_id');
+        $image->description=$request->input('description');
+        $image->label_checking_id=$request->input('label_checking_id');
+        $image->path=$request->file('path')->store('images');
+        $image->save();
+        return $image;
+
+    
     }
 
 

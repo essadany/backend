@@ -36,4 +36,14 @@ class ProblemDescription extends Model
     {
         return $this->belongsTo(Claim::class);
     }
+    /**
+     * Get all of the images for the ProblemDescription
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images()
+    {
+        return $this->hasMany(Image::class,'problem_id','id');
+    }
+   
 }

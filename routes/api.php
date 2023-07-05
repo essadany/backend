@@ -386,11 +386,16 @@ Route::get('/images',function(){
 Route::get('image/{id}',function($id){
     return new ImageRessource(Image::findOrFail($id));
 });
+
+Route::get('/label_checking/{label_id}/image',[ImageController::class, 'getImageOfLabelChecking']);
+Route::get('/problem_description/{id}/images',[ImageController::class, 'getImgagesOfProblemDescription']);
+Route::get('/report/{id}/images',[ImageController::class, 'getImgagesOfReport']);
+
 Route::post('/image',[ImageController::class, 'store']);
 
 Route::put('/image/{id}',[ImageController::class, 'update']);
 
-Route::post('/upload_image',[ImageController::class, 'uploadImage']);
+Route::post('/add_image',[ImageController::class, 'addImage']);
 
 Route::delete('/image/{id}',[ImageController::class, 'destroy']);
 

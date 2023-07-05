@@ -21,4 +21,13 @@ class LabelChecking extends Model
     {
         return $this->belongsTo(Claim::class);
     }
+    /**
+     * Get the image associated with the LabelChecking
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function image()
+    {
+        return $this->hasOne(Image::class);
+    }
 }

@@ -41,4 +41,22 @@ class Report extends Model
     {
         return $this->hasMany(Action::class);
     }
+    /**
+     * Get the annexe that owns the Report
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function annexe()
+    {
+        return $this->belongsTo(Annexe::class);
+    }
+    /**
+     * Get all of the images for the Report
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

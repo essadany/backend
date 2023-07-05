@@ -69,6 +69,9 @@ class ClaimController extends Controller
     $dueDate = $openingDate->addDays(28);
     $report->due_date = $dueDate;
     $Claim->report()->save($report);
+    //Create associated annexe
+    $annexe = new Annexe();
+    $report->annexe()->save($annexe);
     //--------------------
     //Create associated containement
     $containement = new Containement();

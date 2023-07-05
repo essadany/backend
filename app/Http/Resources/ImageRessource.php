@@ -19,7 +19,8 @@ class ImageRessource extends JsonResource
             'path'=>$this->path,
             'report_id'=>$this->report_id,
             'annexe_id'=>$this->annexe_id,
-            'label_check_id'=>$this->label_check_id,
+            'label_checking_id'=>$this->label_checking_id,
+            'problem_id'=>$this->problem_id,
             'isGood'=>$this->isGood,
             'description'=>$this->description,
         ];
