@@ -5,11 +5,12 @@ use App\Models\Image;
 use App\Models\LabelChecking;
 use App\Models\ProblemDescription;
 use App\Models\Report;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\File;
+
 
 class ImageController extends Controller
 {
@@ -75,31 +76,36 @@ class ImageController extends Controller
      */
     public function update(Request $request, $id)
 {
-    $image = Image::find($id);
-    if ($image) {
+    try {
+        $image = Image::find($id);
+
+        // Check if the image file exists in storage
+        if (!Storage::exists($image->path)) {
+            throw new FileNotFoundException('Image file not found');
+        }
+
+            // Delete the old image file
+
+            Storage::delete($image->path);
+            $image->delete();
+            $newPath = $request->file('path')->store('images');
+           $image->path = $newPath;
+           /*$image->update([
+            'path' => $newPath,
+        ]);*/
+        // Update the image record in the database
         $image->isGood = $request->input('isGood');
         $image->description = $request->input('description');
-
-        // Check if the user has uploaded a new image file
-        if ($request->hasFile('path')) {
-            // Delete the old image file
-            Storage::delete($image->path);
-
-            // Store the new image file
-            $newPath = $request->file('path')->store('images');
-            $image->update([
-                'path' => $newPath,
-            ]);
-        }
+        // Store the new image file
         $image->save();
 
         return response()->json([
             'message' => 'Image Record Updated Successfully'
         ]);
-    } else {
-        return response()->json([
-            'message' => 'Image Record Not Found'
-        ], 404);
+    } catch (FileNotFoundException $e) {
+        return response()->json(['message' => $e->getMessage()], 404);
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
     }
 }
 
@@ -108,17 +114,25 @@ class ImageController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Image::where("id",$id)->exists()){
-            $Image = Image::find($id);
+        try {
+            $image = Image::find($id);
+    
+            // Check if the image file exists in storage
+            if (!Storage::exists($image->path)) {
+                throw new FileNotFoundException('Image file not found');
+            }
+    
+            // Delete the image file from storage
             Storage::delete($image->path);
-            $Image->delete();
-            return response()->json([
-                'message' => 'Image Record Deleted Successfully'
-            ], 200);
-        }else{
-            return response()->json([
-                'message' => 'Image Record Not Found'
-            ],404);
+    
+            // Delete the image record from the database
+            $image->delete();
+    
+            return response()->json(['message' => 'Image deleted successfully']);
+        } catch (FileNotFoundException $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
     public function getImageOfLabelChecking($label_id){
