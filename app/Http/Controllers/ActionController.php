@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Action;
+use App\Models\Notification;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ActionController extends Controller
 {
@@ -41,11 +44,26 @@ class ActionController extends Controller
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
-    $Action = Action::create($input);
+    $action = Action::create($input);
+    /*if ($action->status === 'on going' && $differenceInDays === 1) {
+        // Create a notification
+        $notification = new Notification();
+        $notification->action_id = $action->id;
+        $notification->message = 'Your action "' . $action->action . '" is due tomorrow.';
+        $notification->save();
+    }*/
+    if ($action->status === 'not started') {
+        // Create a notification
+        $notification = new Notification();
+        $notification->action_id = $action->id;
+        $notification->user_id = $action->user_id;
+        $notification->message = ' "'.$notification->created_at .'" : New action To Do before "' . $action->planned_date .'" ';
+        $notification->save();
+    }
     return response()->json([ 
         'success'=>true,
         'message'=> 'Action Record Created Successfully',
-        'Action'=>$Action
+        'Action'=>$action
     ]);
     }
 
@@ -119,8 +137,10 @@ class ActionController extends Controller
      //Update Status
      public function updateStatus(Request $request, $id)
      {
+        
          if(Action::where('id',$id)->exists()){
              $Action = Action::find($id);
+             
              $Action->status = $request->status;
              $Action->start_date = $request->start_date;
              $Action->done_date = $request->done_date;
@@ -128,7 +148,29 @@ class ActionController extends Controller
              return response()->json([
                  'message'=>'Status Record Updated Successfully'
              ],);
+             
          }
+         $actions = Action::all();
+
+        foreach ($actions as $action) {
+            $currentDate = date('Y-m-d');
+
+            if ($action->done_date !== null && $action->done_date > $action->planned_date) {
+                $action->status = 'delayed';
+                $action->save();
+            }
+
+            if ($action->start_date !== null && $action->start_date > $action->planned_date) {
+                $action->status = 'delayed';
+                $action->save();
+            }
+
+            if ($action->planned_date > $currentDate) {
+                $action->status = 'delayed';
+                $action->save();
+            }
+            }
+            
      }
     //Get Activated Actions
     public function getActivatedActions($report_id){
@@ -189,4 +231,15 @@ class ActionController extends Controller
             ->get();
         return $Actions;
     }
+    public function getNumberOfActionsNotStarted($user_id){
+        $numberOfActions = DB::table('actions')
+            ->join('users', 'users.id', '=', 'actions.user_id')
+            ->where('actions.deleted', false)
+            ->where('actions.user_id', $user_id)
+            ->where('actions.status', 'not started')
+            ->count();
+    
+        return $numberOfActions;
+    }
+    
 }

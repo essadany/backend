@@ -60,4 +60,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Meeting::class, 'meeting_users');
     }
+
+    /**
+     * Get all of the notifications for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

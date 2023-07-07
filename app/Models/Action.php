@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Observers\ActionObserver;
 
 class Action extends Model
 {
@@ -39,5 +40,11 @@ class Action extends Model
     public function comments()
     {
         return $this->hasMany(ActionComment::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        self::observe(ActionObserver::class);
     }
 }

@@ -72,6 +72,17 @@ use App\Http\Controllers\EffectivenessController;
 use App\Models\TeamUser;
 use App\Http\Resources\TeamUserRessource;
 use App\Http\Controllers\TeamUserController;
+use App\Http\Controllers\ExcelController;
+use App\Http\Resources\ExcelRessource;
+use App\Models\Excel;
+use App\Http\Controllers\TestController;
+use App\Http\Resources\TestRessource;
+use App\Models\Test;
+use App\Http\Controllers\NotificationController;
+
+use App\Http\Resources\NotificationRessource;
+use App\Models\Notification;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -188,6 +199,8 @@ Route::get('/report/{report_id}/implemented_actions',[ActionController::class, '
 Route::get('/report/{report_id}/preventive_actions',[ActionController::class, 'getPreventiveActions']);
 Route::get('/report/{report_id}/potential_actions',[ActionController::class, 'getPotentialActions']);
 Route::get('/user/{user_id}/actions_join_claims',[ActionController::class, 'getActions_join_claims']);
+Route::get('/user/{user_id}/actions_not_started',[ActionController::class, 'getNumberOfActionsNotStarted']);
+
 
 
 Route::post('/action',[ActionController::class, 'store']);
@@ -503,3 +516,28 @@ Route::group(['middleware'=>'api'],function(){
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+//-------------------------------------------------------------------Excel ----------------------------------------------------
+Route::get('/populate-excel', [ExcelController::class],'populateExcel');
+Route::get('/excels',function(){
+    return ExcelRessource::collection(Excel::all());
+});
+Route::get('excel/{id}',function($id){
+    return new ExcelRessource(Excel::findOrFail($id));
+});
+
+
+//--------------------------------------------Notifications--------------------------------------------------------------------
+Route::get('/notifications',function(){
+    return NotificationRessource::collection(Notification::all());
+});
+
+Route::get('notification/{id}',function($id){
+    return new NotificationRessource(Notification::findOrFail($id));
+});
+Route::get('user/{user_id}/notifications',[NotificationController::class, 'getNotificationsOfUser']);
+Route::get('user/{user_id}/notifications_number',[NotificationController::class, 'getNumberOfNotifications']);
+
+Route::post('/notification',[NotificationController::class, 'store']);
+Route::put('/notification/{id}',[NotificationController::class, 'update']);
+Route::delete('/notification/{id}',[NotificationController::class, 'destroy']);
+

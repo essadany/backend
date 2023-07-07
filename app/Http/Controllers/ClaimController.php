@@ -157,12 +157,24 @@ class ClaimController extends Controller
     {
         if(Claim::where('id',$id)->exists()){
             $Claim = Claim::find($id);
-            $Claim->status = $request->status?? 'not started';
+            $Claim->status = $request->status?? 'on going';
+            $Claim->done_date = $request->done_date;
             $Claim->save();
             return response()->json([
                 'message'=>'Claim Record Updated Successfully'
             ],);
         }
+        $claims = Claim::all();
+
+        foreach ($claims as $claim) {
+            if($claim->$done_date!==""){
+                if ($claim->done_date > $claim->planned_date) {
+                    $claim->status = 'delayed';
+                    $claim->save();
+                }
+            }
+        
+         }
     }
 
     /**
