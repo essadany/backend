@@ -57,7 +57,7 @@ class ActionController extends Controller
         $notification = new Notification();
         $notification->action_id = $action->id;
         $notification->user_id = $action->user_id;
-        $notification->message = ' "'.$notification->created_at .'" : New action To Do before "' . $action->planned_date .'" ';
+        $notification->message = ' '. $action->created_at .' : New action To Do before "' . $action->planned_date .'" ';
         $notification->save();
     }
     return response()->json([ 
@@ -150,26 +150,6 @@ class ActionController extends Controller
              ],);
              
          }
-         $actions = Action::all();
-
-        foreach ($actions as $action) {
-            $currentDate = date('Y-m-d');
-
-            if ($action->done_date !== null && $action->done_date > $action->planned_date) {
-                $action->status = 'delayed';
-                $action->save();
-            }
-
-            if ($action->start_date !== null && $action->start_date > $action->planned_date) {
-                $action->status = 'delayed';
-                $action->save();
-            }
-
-            if ($action->planned_date > $currentDate) {
-                $action->status = 'delayed';
-                $action->save();
-            }
-            }
             
      }
     //Get Activated Actions
