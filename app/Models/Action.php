@@ -27,7 +27,7 @@ class Action extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function report(): BelongsTo
+    public function report()
     {
         return $this->belongsTo(Report::class);
     }
@@ -46,5 +46,15 @@ class Action extends Model
     {
         parent::boot();
         self::observe(ActionObserver::class);
+    }
+
+    /**
+     * Get the user that owns the Action
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

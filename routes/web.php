@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Mail\SendMail;
+use App\Http\Controllers\MailController;
+use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,4 +29,5 @@ Route::get('images/{filename}', function ($filename) {
     return response()->file($path);
 })->where('filename', '.*');
 
+Route::get('/send-email', [MailController::class,'index']);
 

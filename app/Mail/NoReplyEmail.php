@@ -8,18 +8,17 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Address;
 
-class SendMail extends Mailable
+class NoReplyEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $mailData;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($mailData)
+    public function __construct()
     {
-        $this->mailData = $mailData;
+        //
     }
 
     /**
@@ -28,7 +27,7 @@ class SendMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New action to Do',
+            subject: 'No Reply Email',
         );
     }
 
@@ -51,15 +50,13 @@ class SendMail extends Mailable
     {
         return [];
     }
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
-        return $this->view('emails.send', $this->mailData);
+        return $this->subject('Welcome to our website')
+                    ->view('emails.send');
     }
-
-    
+    public function sendEmail(){
+        $email = new NoReplyEmail();
+        Mail::to('essadanyya@cy-tech.fr')->send($email);
+    }
 }

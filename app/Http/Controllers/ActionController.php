@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Action;
+use App\Models\Report;
+use App\Models\Claim;
+use App\Models\User;
+
 use App\Models\Notification;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use App\Mail\SendMail;
+use Illuminate\Support\Facades\Mail;
 class ActionController extends Controller
 {
     /**
@@ -45,13 +50,8 @@ class ActionController extends Controller
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
     $action = Action::create($input);
-    /*if ($action->status === 'on going' && $differenceInDays === 1) {
-        // Create a notification
-        $notification = new Notification();
-        $notification->action_id = $action->id;
-        $notification->message = 'Your action "' . $action->action . '" is due tomorrow.';
-        $notification->save();
-    }*/
+
+   
     if ($action->status === 'not started') {
         // Create a notification
         $notification = new Notification();
@@ -60,6 +60,19 @@ class ActionController extends Controller
         $notification->message = ' '. $action->created_at .' : New action To Do before "' . $action->planned_date .'" ';
         $notification->save();
     }
+
+     //Send Email ------------------
+    $claim = $action->report->claim;
+    $email = $action->user->email;
+    $mailData = [
+        'title' => 'New Action To Do before: ' . $action->planned_date,
+        'body' => 'You have a new Action to finish before ' . $action->planned_date . '. 
+            It is about the Claim with intern Reference : ' . $claim->internal_ID,
+    ];
+
+    Mail::to($email)->send(new SendMail($mailData));
+    /////////////////////////////////////////////////////////////////
+   
     return response()->json([ 
         'success'=>true,
         'message'=> 'Action Record Created Successfully',
@@ -73,6 +86,7 @@ class ActionController extends Controller
     public function show(string $id)
     {
         return Action::find($id);
+
     }
 
     /**
