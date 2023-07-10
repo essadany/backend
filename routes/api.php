@@ -517,7 +517,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 //-------------------------------------------------------------------Excel ----------------------------------------------------
-Route::get('/populate-excel', [ExcelController::class],'populateExcel');
+Route::get('/populate-excel', 'App\Http\Controllers\ExcelController@populateExcel');
+Route::get('/download-excel', [ExcelController::class],'downloadExcel');
 Route::get('/excels',function(){
     return ExcelRessource::collection(Excel::all());
 });

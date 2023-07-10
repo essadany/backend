@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use App\Models\User;
+use Illuminate\Http\Response;
+
 class ExcelController extends Controller
 {
     /**
@@ -63,10 +67,11 @@ class ExcelController extends Controller
     {
         //
     }
-    public function populateExcel()
+    public function populateExcel(Request $request)
     {
         // Path to the existing Excel file
-        $filePath = 'H:/Bontaz.xlsx';
+        $filePath = storage_path("test.xlsx");
+
 
         // Load the existing Excel file
         $spreadsheet = IOFactory::load($filePath);
@@ -76,11 +81,12 @@ class ExcelController extends Controller
         $data = User::all(); // Replace with your actual model and data retrieval logic
 
         // Populate the Excel sheet with data
-        $row = 45; // Starting row (e.g., 2 to skip header row)
+        //$row = 45; // Starting row (e.g., 2 to skip header row)
+        $row = 2;
         foreach ($data as $item) {
             // Set value in merged cells
-            $sheet->mergeCells('AQ' . $row . ':CE' . $row); // Assuming cells A and B are merged
-            $sheet->setCellValue('AQ' . $row, $item->column1); // Replace 'column1' with your actual column name
+            //$sheet->Cell('AQ' . $row . ':CE' . $row); // Assuming cells A and B are merged
+           // $sheet->setCellValue('AQ' . $row, $item->name); // Replace 'column1' with your actual column name
 
             // Add more cell population code for other columns as needed
             // For example, if cells C and D are merged:
@@ -88,13 +94,34 @@ class ExcelController extends Controller
             // $sheet->setCellValue('C' . $row, $item->column2);
 
            // $row++;
+            $cellColumn = 'C';
+            $cellRow = $row;
+            $sheet->setCellValue($cellColumn . $cellRow, $item->name);
+
         }
 
         // Save the modified Excel file
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save($filePath);
 
-        return response()->json(['file' => $filePath]);
+        // Create a file response
+        $headers = [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ];
+
+        return response()->download($filePath, 'data.xlsx', $headers);
+    }
+
+        public function downloadExcel()
+    {
+        $filePath = storage_path('/excel/test.xlsx');
+        $fileName = 'data.xlsx';
+
+        $headers = [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ];
+
+        return Response::download($filePath, $fileName, $headers);
     }
 }
 

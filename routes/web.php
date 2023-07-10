@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Mail\SendMail;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\ExcelController;
 use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,6 @@ Route::get('images/{filename}', function ($filename) {
 })->where('filename', '.*');
 
 Route::get('/send-email', [MailController::class,'index']);
+Route::get('/download-excel', [ExcelController::class,'downloadExcel']);
+
 
