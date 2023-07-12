@@ -44,7 +44,7 @@ class UserController extends Controller
             'password' => 'required',
             'phone' => '',
             'fonction' => 'required',
-            'role' => 'required'
+            'role' => ''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());

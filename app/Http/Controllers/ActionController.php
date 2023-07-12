@@ -65,7 +65,7 @@ class ActionController extends Controller
     $claim = $action->report->claim;
     $email = $action->user->email;
     $mailData = [
-        'title' => 'New Action To Do before: ' . $action->planned_date,
+        'title' => 'New Action To Do before: ' . $action->planned_date.'-- Action :  '.$action->action,
         'body' => 'You have a new Action to finish before ' . $action->planned_date . '. 
             It is about the Claim with intern Reference : ' . $claim->internal_ID,
     ];
@@ -108,9 +108,7 @@ class ActionController extends Controller
             $Action->action = $request->action;
             $Action->type = $request->type;
             $Action->planned_date = $request->planned_date;
-            $Action->start_date = $request->start_date;
-            $Action->status = $request->status?? 'not started';;
-            $Action->done_date = $request->done_date;
+
             $Action->save();
             return response()->json([
                 'message'=>'Action Record Updated Successfully'
@@ -154,7 +152,6 @@ class ActionController extends Controller
         
          if(Action::where('id',$id)->exists()){
              $Action = Action::find($id);
-             
              $Action->status = $request->status;
              $Action->start_date = $request->start_date;
              $Action->done_date = $request->done_date;

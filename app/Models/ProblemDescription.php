@@ -26,10 +26,14 @@ class ProblemDescription extends Model
                             'description'      
 ];
     protected $table = 'problem_descriptions';
+    protected $enum = [
+        'bontaz_fault'=>['YES','NO','NOT CONFIRMED']
+    ];
     protected $attributes = [
         'recurrence' => false,
         'received'=>false,
-        'bontaz_fault'=>false
+        'bontaz_fault'=>'NOT CONFIRMED'
+        
     ];
 
     public function claim()

@@ -23,4 +23,13 @@ class Notification extends Model
      {
          return $this->belongsTo(User::class);
      }
+    /**
+     * Get the action that owns the Notification
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function action()
+    {
+        return $this->belongsTo(Action::class);
+    }
 }

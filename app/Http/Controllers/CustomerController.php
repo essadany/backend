@@ -35,7 +35,7 @@ class customerController extends Controller
             'customer_ref'=>'required',
             'name'=> 'required',
             'category' => 'required',
-            'info' => 'required'
+            'info' => ''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());

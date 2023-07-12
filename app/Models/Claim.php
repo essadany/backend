@@ -10,17 +10,19 @@ use Illuminate\Database\Eloquent\Relations\hasOne;
 class Claim extends Model
 {
     use HasFactory;
-    protected $fillable = ['internal_ID','refRecClient','product_ref', 'status','engraving', 'prod_date', 'object', 
+    protected $fillable = ['internal_ID','refRecClient','category','product_ref', 'status','engraving', 'prod_date', 'object', 
     'opening_date', 'final_cusomer', 'claim_details', 'def_mode',
     'nbr_claimed_parts', 'returned_parts'];
     protected $enum = [
-        'status' => ['on going', 'done','delayed']
+        'status' => ['on going', 'done','delayed'],
+        'category'=> ['AQI', 'CC','Field']
     ];
     protected $attributes = [
         'status' => 'on going',
         'deleted'=>false
     ];
     protected $table = 'claims';
+
     
     public function team()
     {
@@ -51,4 +53,13 @@ class Claim extends Model
         return $this->hasOne(LabelChecking::class);
     }
     
+    /**
+     * Get the product associated with the Claim
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function product(): HasOne
+    {
+        return $this->hasOne(Product::class, 'product_ref', 'product_ref');
+    }
 }

@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Mail;
 Route::get('/', function () {
     return view('welcome');
 });
-//Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::get('images/{filename}', function ($filename) {
     $path = storage_path('app/images/' . $filename);
 
@@ -30,7 +29,6 @@ Route::get('images/{filename}', function ($filename) {
     return response()->file($path);
 })->where('filename', '.*');
 
-Route::get('/send-email', [MailController::class,'index']);
-Route::get('/download-excel', [ExcelController::class,'downloadExcel']);
+
 
 

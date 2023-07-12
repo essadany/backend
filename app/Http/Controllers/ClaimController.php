@@ -10,6 +10,8 @@ use Carbon\Carbon;
 
 use App\Models\ProblemDescription;
 use App\Models\Report;
+use App\Models\Annexe;
+
 use App\Models\Ishikawa;
 use App\Models\FiveWhy;
 use App\Models\LabelChecking;
@@ -44,16 +46,17 @@ class ClaimController extends Controller
         $validator = Validator::make($input,[
             'internal_ID'=>'required',
             'refRecClient'=> 'required',
+            'category' => 'required',
             'product_ref' => 'required',
             'engraving' => 'required',
             'prod_date' => 'required',
             'object' => 'required',
             'opening_date'=> 'required',
             'final_cusomer' => '',
-            'claim_details'=>'required',
+            'claim_details'=>'',
             'def_mode'=> '',
             'nbr_claimed_parts' => 'required',
-            'returned_parts' => ''
+            'returned_parts' => '',
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -66,12 +69,15 @@ class ClaimController extends Controller
     //Create associated report
     $report = new Report();
     $openingDate = Carbon::parse($Claim->opening_date);
-    $dueDate = $openingDate->addDays(28);
-    $report->due_date = $dueDate;
+    $sub_date = $openingDate->addDays(10);
+    $report->sub_date = $sub_date;
     $Claim->report()->save($report);
     //Create associated annexe
     $annexe = new Annexe();
     $report->annexe()->save($annexe);
+    //Create associated Effectiveness
+    $eff = new Effectiveness();
+    $report->effetiveness()->save($eff);
     //--------------------
     //Create associated containement
     $containement = new Containement();
@@ -134,6 +140,7 @@ class ClaimController extends Controller
             $Claim = Claim::find($id);
             $Claim->internal_ID = $request->internal_ID;
             $Claim->refRecClient = $request->refRecClient;
+            $Claim->category = $request->category;
             $Claim->product_ref = $request->product_ref;
             $Claim->engraving = $request->engraving;
             $Claim->prod_date = $request->prod_date;
@@ -223,10 +230,34 @@ class ClaimController extends Controller
             ->join('products', 'claims.product_ref', '=', 'products.product_ref')
             ->join('customers','customers.id', '=', 'products.customer_id' )
             ->where('claims.deleted',false)
-            ->select( 'customers.id as customer_id','customers.name as customer_name','claims.*','products.name as product_name','customers.category')
+            ->select( 'customers.id as customer_id','customers.name as customer_name','claims.*','products.name as product_name')
             ->get();
         return $claims;
     }
+    //Claims Tracking
+    public function getClaims_tracking(){
+        $claims = DB::table('claims')
+        ->leftJoin('reports', 'claims.id', '=', 'reports.claim_id')
+        ->leftJoin('problem_descriptions', 'claims.id', '=', 'problem_descriptions.claim_id')
+        ->leftJoin('ishikawas', 'claims.id', '=', 'ishikawas.claim_id')
+        ->leftJoin('categories', 'ishikawas.id', '=', 'categories.ishikawa_id')
+        ->leftJoin('containements', 'claims.id', '=', 'containements.claim_id')
+       // ->leftJoin('sortings', 'containements.id', '=', 'sortings.containement_id')
+        ->join('products', 'claims.product_ref', '=', 'products.product_ref')
+        ->join('customers', 'customers.id', '=', 'products.customer_id')
+            ->where('claims.deleted',false)
+            ->select( 'customers.id as customer_id','customers.name as customer_name','claims.*','products.name as product_name','products.customer_ref','products.uap',
+                        'reports.id as report_id','reports.progress_rate','reports.status as report_status',
+                        'reports.due_date as report_due_date','reports.sub_date as report_sub_date',
+                        'reports.sub_date as report_sub_date','reports.due_date as report_due_date',
+                        'problem_descriptions.id as prob_desc_id','problem_descriptions.date_reception','categories.input as ishikawa_input','problem_descriptions.how_many_after',
+                        'problem_descriptions.recurrence','problem_descriptions.bontaz_fault',
+                        'categories.type as ishikawa_category','categories.isPrincipale as ishikawa_principale')
+
+            ->get();
+        return $claims;
+    }
+    //////////////////////////////////////////
     public function getTeamByClaim($id){
         $Claim = Claim::find($id);
         $team = $Claim->team ;
@@ -255,6 +286,16 @@ class ClaimController extends Controller
         $Claim = Claim::find($id);
         $report = $Claim->report ;
         return response()->json($report);
+    }
+    public function getEffectivenessByClaim($id){
+        $Claim = Claim::find($id);
+        $eff = $Claim->report->effectiveness ;
+        return response()->json($eff);
+    }
+    public function getAnnexeByClaim($id){
+        $Claim = Claim::find($id);
+        $annexe = $Claim->report->annexe ;
+        return response()->json($annexe);
     }
     public function getProbDescByClaim($id){
         $Claim = Claim::find($id);

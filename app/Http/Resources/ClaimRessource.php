@@ -17,6 +17,7 @@ class ClaimRessource extends JsonResource
         return ['id'=>$this->id,
         'internal_ID' => $this->internal_ID,
         'refRecClient' => $this->refRecClient,
+        'category' => $this->category,
         'product_ref' => $this->product_ref,
         'engraving' => $this->engraving,
         'prod_date' => $this->prod_date,

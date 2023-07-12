@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('internal_ID')->unique();
             $table->string('refRecClient');
+            $table->enum('category',['AQI', 'CC','Field'])->nullable();
             $table->string('product_ref');
             $table->string('engraving')->nullable();
             $table->date('prod_date')->nullable();

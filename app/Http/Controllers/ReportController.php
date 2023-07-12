@@ -50,7 +50,7 @@ class ReportController extends Controller
             'ctrl_plan'=>'required',
             'pfmea'=>'required',
             'dfmea'=>'required',
-            'progress_rate'=>'required'
+            'progress_rate'=>''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -99,6 +99,7 @@ class ReportController extends Controller
             $report->ctrl_plan = $request->ctrl_plan;
             $report->pfmea = $request->pfmea;
             $report->dfmea = $request->dfmea;
+            $report->status = $request->status;
             $report->progress_rate = $request->progress_rate;
             $report->save();
             return response()->json([

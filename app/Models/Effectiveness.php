@@ -15,4 +15,13 @@ class Effectiveness extends Model
         'file',
         'description'
     ];
+    /**
+     * Get the report that owns the Effectiveness
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function report(): BelongsTo
+    {
+        return $this->belongsTo(Report::class);
+    }
 }

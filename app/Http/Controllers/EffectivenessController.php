@@ -67,7 +67,6 @@ class EffectivenessController extends Controller
     {
         if(Effectiveness::where('id',$id)->exists()){
             $Effectiveness = Effectiveness::find($id);
-            $Effectiveness->report_id = $request->report_id;
             $Effectiveness->title = $request->title;
             $Effectiveness->file = $request->file;
             $Effectiveness->description = $request->description;

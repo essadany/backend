@@ -21,7 +21,7 @@ class FiveLigne extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function five_why()
+    public function five_why():BelongsTo
     {
         return $this->belongsTo(FiveWhy::class);
     }

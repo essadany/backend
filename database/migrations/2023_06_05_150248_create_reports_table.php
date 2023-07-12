@@ -28,7 +28,8 @@ return new class extends Migration
             $table->boolean('ctrl_plan')->default(false);
             $table->boolean('pfmea')->default(false);
             $table->boolean('dfmea')->default(false);
-            $table->string('progress_rate')->nullable();
+            $table->enum('status',['Submitted','On going','No 8D Required'])->default('On going');
+            $table->string('progress_rate')->default('0%');
             $table->timestamps();
 
             $table->foreign('claim_id')->references('id')->on('claims')

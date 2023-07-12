@@ -84,8 +84,9 @@ class NotificationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if(Notification::where('id',$id)->exists()){
-            $notification = Notification::find($id);
+        if(Action::where('id',$id)->exists()){
+            $action = Action::find($id);
+            $Notification = $action->notification;
             $notification->message = $request->message;
             $notification->save();
             return response()->json([
@@ -99,8 +100,9 @@ class NotificationController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Notification::where("id",$id)->exists()){
-            $Notification = Notification::find($id);
+        if(Action::where("id",$id)->exists()){
+            $action = Action::find($id);
+            $Notification = $action->notification;
             $Notification->delete();
             return response()->json([
                 'message' => 'Notification Record Deleted Successfully'
@@ -122,5 +124,10 @@ class NotificationController extends Controller
             ->count();
     
         return $numberOfNotifications;
+    }
+    public function getNotificationOfAction($action_id){
+        $action = Action :: find($action_id);
+        $notification = $action->notification;
+        return response()->json($notification);
     }
 }

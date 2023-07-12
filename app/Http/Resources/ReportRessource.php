@@ -31,6 +31,7 @@ class ReportRessource extends JsonResource
             'ctrl_plan'=>$this->ctrl_plan,
             'pfmea'=>$this->pfmea,
             'dfmea'=>$this->dfmea,
+            'status'=>$this->status,
             'progress_rate'=>$this->progress_rate
         ];
     }

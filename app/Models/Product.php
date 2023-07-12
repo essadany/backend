@@ -20,6 +20,15 @@ class Product extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+    /**
+     * Get the claim that owns the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function claim(): BelongsTo
+    {
+        return $this->belongsTo(Claim::class);
+    }
 }
 
 

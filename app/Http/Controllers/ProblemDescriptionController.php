@@ -41,7 +41,7 @@ class ProblemDescriptionController extends Controller
             'received'=>'',
             'date_reception'=>'',
             'date_done'=>'required',
-            'bontaz_fault'=>'required',
+            'bontaz_fault'=>'',
             'description'=>'required'      
         ]);
         if($validator->fails()){

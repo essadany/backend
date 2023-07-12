@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Observers\ActionObserver;
 
 class Action extends Model
 {
@@ -42,11 +41,7 @@ class Action extends Model
         return $this->hasMany(ActionComment::class);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        self::observe(ActionObserver::class);
-    }
+  
 
     /**
      * Get the user that owns the Action
@@ -56,5 +51,14 @@ class Action extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    /**
+     * Get the notification associated with the Action
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function notification()
+    {
+        return $this->hasOne(Notification::class);
     }
 }

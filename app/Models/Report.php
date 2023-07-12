@@ -25,8 +25,16 @@ class Report extends Model
     'ctrl_plan',
     'pfmea',
     'dfmea',
+    'status',
     'progress_rate'];
-
+    protected $enum = [
+        'status' => ['Submitted','On going', 'No 8D Required'],
+        'category'=> ['AQI', 'CC','Field'],
+        
+    ];
+    protected $attributes = [
+        'status' => 'On going',
+        'progress_rate'=>'0%'    ];
     public function claim()
     {
         return $this->belongsTo(Claim::class);
@@ -42,13 +50,17 @@ class Report extends Model
         return $this->hasMany(Action::class);
     }
     /**
-     * Get the annexe that owns the Report
+     * Get the annexe associated with the Report
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function annexe()
     {
-        return $this->belongsTo(Annexe::class);
+        return $this->hasOne(Annexe::class);
+    }
+    public function effectiveness()
+    {
+        return $this->hasOne(Effectiveness::class);
     }
     /**
      * Get all of the images for the Report

@@ -143,6 +143,7 @@ Route::get('claim/{id}',function($id){
     return new ClaimRessource(Claim::findOrFail($id));
 });
 Route::get('/claims_join',[ClaimController::class, 'getClaimsJoin']);
+Route::get('/claims_tracking',[ClaimController::class, 'getClaims_tracking']);
 Route::get('/claim/{id}/team',[ClaimController::class, 'getTeamByClaim']);
 Route::get('/claim/{id}/containement',[ClaimController::class, 'getContainementByClaim']);
 Route::get('/claim/{id}/report',[ClaimController::class, 'getReportByClaim']);
@@ -154,6 +155,8 @@ Route::get('/claim/{id}/actions',[ClaimController::class, 'getActionsByClaim']);
 Route::get('/claim/{id}/problem_description',[ClaimController::class, 'getProbDescByClaim']);
 Route::get('/claim/{id}/label_checking_join',[ClaimController::class, 'getLabelCheckJoin']);
 Route::get('/claim/{id}/report_join',[ClaimController::class, 'getReportJoin']);
+Route::get('claim/{claim_id}/effectiveness',[ClaimController::class, 'getEffectivenessByClaim']);
+Route::get('claim/{claim_id}/annexe',[ClaimController::class, 'getAnnexeByClaim']);
 
 Route::get('/claims_activated',[ClaimController::class, 'getActivatedClaims']);
 Route::get('/claim/{id}/team_users',[ClaimController::class, 'getUsersOfTeam']);
@@ -451,7 +454,6 @@ Route::get('annexe/{id}',function($id){
     return new AnnexeRessource(Annexe::findOrFail($id));
 });
 Route::post('/annexe',[AnnexeController::class, 'store']);
-
 Route::put('/annexe/{id}',[AnnexeController::class, 'update']);
 
 Route::delete('/annexe/{id}',[AnnexeController::class, 'destroy']);
@@ -495,7 +497,6 @@ Route::get('effectiveness/{id}',function($id){
     return new EffectivenessRessource(Effectiveness::findOrFail($id));
 });
 Route::post('/effectiveness',[EffectivenessController::class, 'store']);
-
 Route::put('/effectiveness/{id}',[EffectivenessController::class, 'update']);
 
 Route::delete('/effectiveness/{id}',[EffectivenessController::class, 'destroy']);
@@ -517,15 +518,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 //-------------------------------------------------------------------Excel ----------------------------------------------------
-Route::get('/populate-excel', 'App\Http\Controllers\ExcelController@populateExcel');
-Route::get('/download-excel', [ExcelController::class],'downloadExcel');
-Route::get('/excels',function(){
-    return ExcelRessource::collection(Excel::all());
-});
-Route::get('excel/{id}',function($id){
-    return new ExcelRessource(Excel::findOrFail($id));
-});
-
+Route::get('/populate-excel/{claim_id}', 'App\Http\Controllers\ExcelController@populateExcel');
 
 //--------------------------------------------Notifications--------------------------------------------------------------------
 Route::get('/notifications',function(){
@@ -535,10 +528,16 @@ Route::get('/notifications',function(){
 Route::get('notification/{id}',function($id){
     return new NotificationRessource(Notification::findOrFail($id));
 });
+Route::get('action/{action_id}/notification',[NotificationController::class, 'getNotificationOfAction']);
+
 Route::get('user/{user_id}/notifications',[NotificationController::class, 'getNotificationsOfUser']);
 Route::get('user/{user_id}/notifications_number',[NotificationController::class, 'getNumberOfNotifications']);
 
 Route::post('/notification',[NotificationController::class, 'store']);
-Route::put('/notification/{id}',[NotificationController::class, 'update']);
-Route::delete('/notification/{id}',[NotificationController::class, 'destroy']);
+Route::put('/action/{action_id}/notification',[NotificationController::class, 'update']);
+Route::delete('/action/{action_id}/notification',[NotificationController::class, 'destroy']);
+//--------------------------------------------Execution--------------------------------------------------------------------
+
+Route::get('/execute-once-a-day', 'App\Http\Controllers\ExecutionController@executeOnceADay');
+
 
