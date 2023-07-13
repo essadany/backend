@@ -15,6 +15,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:daily-command')->daily();
     }
+    protected $commands = [
+        DailyCommand::class,
+    ];
+    
 
     /**
      * Register the commands for the application.

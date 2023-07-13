@@ -5,6 +5,8 @@ use App\Models\Claim;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Containement;
+use App\Models\Effectiveness;
+
 use App\Models\Result;
 use Carbon\Carbon;
 
@@ -57,6 +59,7 @@ class ClaimController extends Controller
             'def_mode'=> '',
             'nbr_claimed_parts' => 'required',
             'returned_parts' => '',
+            'deleted'=>''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -69,15 +72,15 @@ class ClaimController extends Controller
     //Create associated report
     $report = new Report();
     $openingDate = Carbon::parse($Claim->opening_date);
-    $sub_date = $openingDate->addDays(10);
-    $report->sub_date = $sub_date;
+    $due_date = $openingDate->addDays(10);
+    $report->due_date = $due_date;
     $Claim->report()->save($report);
     //Create associated annexe
     $annexe = new Annexe();
     $report->annexe()->save($annexe);
     //Create associated Effectiveness
-    $eff = new Effectiveness();
-    $report->effetiveness()->save($eff);
+   /* $eff = new Effectiveness();
+    $report->effetiveness()->save($eff);*/
     //--------------------
     //Create associated containement
     $containement = new Containement();
@@ -156,6 +159,32 @@ class ClaimController extends Controller
                 'message'=>'Claim Record Updated Successfully'
             ],);
         }
+    }
+    // Update Claim Tracking
+    public function updateClaimTracking(Request $request, $id){
+        if(Claim::where('id',$id)->exists()){
+            $claim = Claim::find($id);
+            $report = $claim->report;
+            $prob_desc = $claim->prob_desc;
+            $claim->claim_details = $request->claim_details;
+            $prob_desc->date_reception = $request->date_reception;
+            $prob_desc->bontaz_fault = $request->bontaz_fault;
+            $report->progress_rate = $request->progress_rate;
+            $report->status = $request->status;
+            $report->sub_date = $request->sub_date;
+            if ($prob_desc->date_reception !== null){
+                $date = Carbon::parse($prob_desc->date_reception);
+                $due_date = $date->addDays(10);
+                $report->due_date = $due_date;
+            }
+            $claim->save();
+            $report->save();
+            $prob_desc->save();
+            return response()->json([
+                'message'=>'Claim Tracking Record Updated Successfully'
+            ],);
+        }
+
     }
     /**
      * Update the specified resource in storage.
@@ -237,14 +266,15 @@ class ClaimController extends Controller
     //Claims Tracking
     public function getClaims_tracking(){
         $claims = DB::table('claims')
+        ->join('products', 'claims.product_ref', '=', 'products.product_ref')
+        ->join('customers', 'customers.id', '=', 'products.customer_id')
         ->leftJoin('reports', 'claims.id', '=', 'reports.claim_id')
         ->leftJoin('problem_descriptions', 'claims.id', '=', 'problem_descriptions.claim_id')
         ->leftJoin('ishikawas', 'claims.id', '=', 'ishikawas.claim_id')
-        ->leftJoin('categories', 'ishikawas.id', '=', 'categories.ishikawa_id')
         ->leftJoin('containements', 'claims.id', '=', 'containements.claim_id')
+        ->leftJoin('categories', 'ishikawas.id', '=', 'categories.ishikawa_id')
        // ->leftJoin('sortings', 'containements.id', '=', 'sortings.containement_id')
-        ->join('products', 'claims.product_ref', '=', 'products.product_ref')
-        ->join('customers', 'customers.id', '=', 'products.customer_id')
+
             ->where('claims.deleted',false)
             ->select( 'customers.id as customer_id','customers.name as customer_name','claims.*','products.name as product_name','products.customer_ref','products.uap',
                         'reports.id as report_id','reports.progress_rate','reports.status as report_status',
@@ -252,8 +282,11 @@ class ClaimController extends Controller
                         'reports.sub_date as report_sub_date','reports.due_date as report_due_date',
                         'problem_descriptions.id as prob_desc_id','problem_descriptions.date_reception','categories.input as ishikawa_input','problem_descriptions.how_many_after',
                         'problem_descriptions.recurrence','problem_descriptions.bontaz_fault',
-                        'categories.type as ishikawa_category','categories.isPrincipale as ishikawa_principale')
-
+                        'categories.type as ishikawa_category','categories.input as ishikawa_principale')
+            ->where(function ($query) {
+                $query->where('categories.isPrincipale', true)
+                    ->orWhereNull('categories.isPrincipale');
+            })
             ->get();
         return $claims;
     }
@@ -356,6 +389,21 @@ class ClaimController extends Controller
         ->get()->first();
         return $report;
     }
-    
+    // Statistiques
+    // Get the top five products that have the big number of claims
+    public function MostProductsClaimed()
+{
+    $records = DB::table('products')
+        ->join('claims','claims.product_ref','=','products.product_ref')
+        ->select('products.product_ref as bontaz_part_number','products.customer_ref as customer_part_number',
+        'products.name as product_designation','products.zone as zone','products.uap as uap_engineer', DB::raw('COUNT(*) as number_of_claims'))
+        ->groupBy('products.product_ref','products.customer_ref',
+        'products.name','products.zone','products.uap')
+        ->orderBy('number_of_claims', 'desc')
+        ->limit(5)
+        ->get();
+    return $records;
+
+}
     
 }

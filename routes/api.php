@@ -162,12 +162,14 @@ Route::get('/claims_activated',[ClaimController::class, 'getActivatedClaims']);
 Route::get('/claim/{id}/team_users',[ClaimController::class, 'getUsersOfTeam']);
 
 Route::get('/claim/{claim_id}/team_meetings',[ClaimController::class, 'getMeetingsByClaim']);
-
+Route::get('/most_products_claimed',[ClaimController::class, 'MostProductsClaimed']);
 Route::post('/claim',[ClaimController::class, 'store']);
 
 Route::put('/claim/{id}',[ClaimController::class, 'update']);
 Route::put('/claim_disactivated/{id}',[ClaimController::class, 'disactivate']);
 Route::put('/claim_status/{id}',[ClaimController::class, 'updateStatus']);
+Route::put('/claim_tracking/{id}',[ClaimController::class, 'updateClaimTracking']);
+
 
 Route::delete('/claim/{id}',[ClaimController::class, 'destroy']);
 

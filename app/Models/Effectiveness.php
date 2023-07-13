@@ -20,7 +20,7 @@ class Effectiveness extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function report(): BelongsTo
+    public function report()
     {
         return $this->belongsTo(Report::class);
     }
