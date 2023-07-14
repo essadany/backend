@@ -79,8 +79,8 @@ class ClaimController extends Controller
     $annexe = new Annexe();
     $report->annexe()->save($annexe);
     //Create associated Effectiveness
-   /* $eff = new Effectiveness();
-    $report->effetiveness()->save($eff);*/
+    $eff = new Effectiveness();
+    $report->effectiveness()->save($eff);
     //--------------------
     //Create associated containement
     $containement = new Containement();

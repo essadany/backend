@@ -9,9 +9,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\User;
 use App\Models\Claim;
 use App\Models\Image;
-
 use Illuminate\Http\Response;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Illuminate\Support\Facades\File;
 
 class ExcelController extends Controller
 {
@@ -74,10 +74,13 @@ class ExcelController extends Controller
     {
         // Path to the existing Excel file
         $filePath = storage_path("app/public/excel/Bontaz.xlsx");
+        // Create a copy of the Excel file
+        $copyPath = storage_path("Bontaz_copy.xlsx");
+        File::copy($filePath, $copyPath);
         $claim = Claim::find($claim_id);
 
         // Load the existing Excel file
-        $spreadsheet = IOFactory::load($filePath);
+        $spreadsheet = IOFactory::load($copyPath);
         $sheet1 = $spreadsheet->getSheetByName("20. 8D Report");
         $sheet2 = $spreadsheet->getSheetByName("21. 8D Annex");
         $sheet3 = $spreadsheet->getSheetByName("30. Team");
@@ -86,6 +89,8 @@ class ExcelController extends Controller
         $sheet6 = $spreadsheet->getSheetByName("33. Containment");
         $sheet7 = $spreadsheet->getSheetByName("35. Ishikawa");
         $sheet8 = $spreadsheet->getSheetByName("36. 5 Why");
+        $sheet9 = $spreadsheet->getSheetByName("37. Effectiveness");
+
         // Retrieve data from the database
         $report = $claim->report; 
         $potential_actions = $report->actions()->where('type','potential')->get();
@@ -93,28 +98,33 @@ class ExcelController extends Controller
         $preventive_actions = $report->actions()->where('type','preventive')->get();
         $product = $claim->product;
         $prob_desc = $claim->prob_desc;
-       // $image = $prob_desc->images()->get()->first();
-        $containement = $claim->containement;
-        $five_why = $claim->five_why;
-        $results_occurence = $five_why->results()->where('type','occurence')->first();
-        $results_detection = $five_why->results()->where('type','detection')->first();
+        
 
+        $report_images = $report->images()->get();
+        foreach ($report_images as $image){
+            $drawing1 = new Drawing();
+            $drawing1->setPath(storage_path('app/'.$image->path));
+            $drawing1->setWidth(80);
+            $drawing1->setHeight(80);
+            $drawing1->setCoordinates('M12');
+            $drawing1->setWorksheet($sheet1);
+        }
         $goodPart = $prob_desc->images()->where('isGood','1')->first();
         $badPart = $prob_desc->images()->where('isGood','0')->first();
         if ($badPart!==null){
             $drawing1 = new Drawing();
             $drawing1->setPath(storage_path('app/'.$badPart->path));
             $drawing1->setWidth(80);
-            $drawing1->setHeight(90);
-            $drawing1->setCoordinates('I12');
+            $drawing1->setHeight(80);
+            $drawing1->setCoordinates('H12');
             $drawing1->setWorksheet($sheet1);
         }
         if ($goodPart!==null){
             $drawing2 = new Drawing();
             $drawing2->setPath(storage_path('app/'.$goodPart->path??''));
             $drawing2->setWidth(80);
-            $drawing2->setHeight(90);
-            $drawing2->setCoordinates('L12');
+            $drawing2->setHeight(80);
+            $drawing2->setCoordinates('K12');
             $drawing2->setWorksheet($sheet1);
         }
 
@@ -229,7 +239,7 @@ class ExcelController extends Controller
         $sheet4->setCellValue('G51', $prob_desc->date_done);
         $sheet4->setCellValue('B32', $prob_desc->description);
         
-        $analyse_images = $prob_desc->images()->where('problem_id',$prob_desc->id)->where('isGood',null)->get();
+        $analyse_images = $prob_desc->images()->where('isGood',null)->get();
 
         if ($badPart!==null){
             $drawing1 = new Drawing();
@@ -259,39 +269,252 @@ class ExcelController extends Controller
             $drawing1->setWorksheet($sheet4);
             $i++;  
         }
+        // Label Checking --------------------------------------------
+        $label_check = $claim->label_checking;
+        $label_image = $label_check->image;
+        
+        $sheet5->setCellValue('D2', $product->customer_ref);
+        $sheet5->setCellValue('D3', $claim->refRecClient);
+        $sheet5->setCellValue('D4', $claim->opening_date);
+        $sheet5->setCellValue('D6', $claim->product_ref);
+        $sheet5->setCellValue('D7', $label_check->sorting_method);
+        $sheet5->setCellValue('D8', $label_check->bontaz_plant);
+        if ($label_image!==null){
+            $drawing5 = new Drawing();
+            $drawing5->setPath(storage_path('app/'.$label_image->path??''));
+            $drawing5->setWidth(80);
+            $drawing5->setHeight(90);
+            $drawing5->setCoordinates('G3');
+            $drawing5->setWorksheet($sheet5);
+        }
+        
+        $sheet5->setCellValue('D11', $product->customer_ref);
+        $sheet5->setCellValue('D12', $claim->refRecClient);
+        $sheet5->setCellValue('D13', $claim->opening_date);
+        $sheet5->setCellValue('D15', $claim->product_ref);
+        $sheet5->setCellValue('D16', $label_check->sorting_method);
+        $sheet5->setCellValue('D17', $label_check->bontaz_plant);
+        if ($label_image!==null){
+            $drawing5 = new Drawing();
+            $drawing5->setPath(storage_path('app/'.$label_image->path??''));
+            $drawing5->setWidth(80);
+            $drawing5->setHeight(90);
+            $drawing5->setCoordinates('G12');
+            $drawing5->setWorksheet($sheet5);
+        }
+        $sheet5->setCellValue('D20', $product->customer_ref);
+        $sheet5->setCellValue('D21', $claim->refRecClient);
+        $sheet5->setCellValue('D22', $claim->opening_date);
+        $sheet5->setCellValue('D24', $claim->product_ref);
+        $sheet5->setCellValue('D25', $label_check->sorting_method);
+        $sheet5->setCellValue('D26', $label_check->bontaz_plant);
+        if ($label_image!==null){
+            $drawing5 = new Drawing();
+            $drawing5->setPath(storage_path('app/'.$label_image->path??''));
+            $drawing5->setWidth(80);
+            $drawing5->setHeight(90);
+            $drawing5->setCoordinates('G21');
+            $drawing5->setWorksheet($sheet5);
+        }   
+        $sheet5->setCellValue('D29', $product->customer_ref);
+        $sheet5->setCellValue('D30', $claim->refRecClient);
+        $sheet5->setCellValue('D31', $claim->opening_date);
+        $sheet5->setCellValue('D33', $claim->product_ref);
+        $sheet5->setCellValue('D34', $label_check->sorting_method);
+        $sheet5->setCellValue('D35', $label_check->bontaz_plant);
+        if ($label_image!==null){
+            $drawing5 = new Drawing();
+            $drawing5->setPath(storage_path('app/'.$label_image->path??''));
+            $drawing5->setWidth(80);
+            $drawing5->setHeight(90);
+            $drawing5->setCoordinates('G30');
+            $drawing5->setWorksheet($sheet5);
+        }
+        //Effectivness -------------------------------------------
+        $eff = $report->effectiveness;
+        $sheet9->setCellValue('B6', $claim->internal_ID);
+        $sheet9->setCellValue('G6', $claim->product_ref);
+        $sheet9->setCellValue('L6', $eff->updated_at);
+        $sheet9->setCellValue('C10', $eff->description);
+        // Five why-------------------------------------
+        $five_why = $claim->five_why;
+        $sheet8->setCellValue('B6', $claim->internal_ID);
+        $sheet8->setCellValue('G6', $claim->product_ref);
+        $sheet8->setCellValue('L6', $five_why->updated_at);
+        $results_occurence = $five_why->results()->where('type','occurence')->first();
+        $results_detection = $five_why->results()->where('type','detection')->first();
+        $results_system = $five_why->results()->where('type','system')->first();
+        $five_whys_occurence = $five_why->five_lignes()->where('type','occurence')->get();
+        $five_whys_detection = $five_why->five_lignes()->where('type','detection')->get();
+        $five_whys_system = $five_why->five_lignes()->where('type','system')->get();
+        $row = 9;
+        foreach($five_whys_occurence as $item){
+            $row1 = $row+1;
+            $sheet8->mergeCells('D'.$row.':M'.$row);
+            $sheet8->mergeCells('E'.$row1.':M'.$row1);
+            $sheet8->setCellValue('D'.$row, $item->why);
+            $sheet8->setCellValue('E'.$row1, $item->answer);
+            $row=$row+2;
+        }
+        $row = 25;
+        foreach($five_whys_detection as $item){
+            $row1 = $row+1;
+            $sheet8->mergeCells('D'.$row.':M'.$row);
+            $sheet8->mergeCells('E'.$row1.':M'.$row1);
+            $sheet8->setCellValue('D'.$row, $item->why);
+            $sheet8->setCellValue('E'.$row1, $item->answer);
+            $row=$row+2;
+                 }
+        $row = 41;
+        foreach($five_whys_system as $item){
+            $row1 = $row+1;
+            $sheet8->mergeCells('D'.$row.':M'.$row);
+            $sheet8->mergeCells('E'.$row1.':M'.$row1);
+            $sheet8->setCellValue('D'.$row, $item->why);
+            $sheet8->setCellValue('E'.$row1, $item->answer);
+            $row=$row+2;
+        }
+        $sheet8->mergeCells('E21:M22');
+        $sheet8->mergeCells('E37:M38');
+        $sheet8->mergeCells('E53:M54');
+        $sheet8->setCellValue('F21', $results_occurence->input);
+        $sheet8->setCellValue('F37', $results_detection->input);
+        $sheet8->setCellValue('F53', $results_system->input);
+        // Ishikawa-------------------------------------------------------
+        $ishikawa = $claim->ishikawa;
+        $categories = $ishikawa->categories()->get();
+        $sheet7->setCellValue('B6', $claim->internal_ID);
+        $sheet7->setCellValue('AG6', $claim->product_ref);
+        $sheet7->setCellValue('BU6', $ishikawa->updated_at);
+        $ishikawa_person = $categories->where('type','Person');
+        $ishikawa_machine = $categories->where('type','Machine');
+        $ishikawa_materials = $categories->where('type','Materials');
+        $ishikawa_method = $categories->where('type','Method');
+        $ishikawa_management = $categories->where('type','Management');
+        $ishikawa_measurement = $categories->where('type','Measurement');
+        $ishikawa_environment = $categories->where('type','Environment');
+        $ishikawa_money = $categories->where('type','Money');
+        $row = 45;
+        foreach($ishikawa_person as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        $row =51;
+        foreach($ishikawa_machine as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        $row=57;
+        foreach($ishikawa_materials as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        $row=63;
+        foreach($ishikawa_method as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        $row = 69;
+        foreach($ishikawa_management as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        $row = 75;
+        foreach($ishikawa_measurement as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        $row = 81;
+        foreach($ishikawa_environment as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        $row=87;
+        foreach($ishikawa_money as $item){
+            $sheet7->mergeCells('N'.$row.':AH'.$row);
+            $sheet7->mergeCells('AI'.$row.':AP'.$row);
+            $sheet7->mergeCells('AQ'.$row.':CE'.$row);
+            $sheet7->setCellValue('N'.$row, $item->input);
+            $sheet7->setCellValue('AI'.$row, $item->influence);
+            $sheet7->setCellValue('AQ'.$row, $item->comment);
+            $row++;
+        }
+        // Containement-------------------------------------------------------
+        $containement = $claim->containement;
+        $sortings = $containement->sortings()->get();
+        $sheet6->mergeCells('C9:M17');
+        $sheet6->mergeCells('C18:M21');
+        $sheet6->mergeCells('B36:M55');
+        $sheet6->setCellValue('B6', $claim->internal_ID);
+        $sheet6->setCellValue('G6', $claim->product_ref);
+        $sheet6->setCellValue('L6', $containement->updated_at);
+        $sheet6->setCellValue('C9', $containement->method_description);
+        $sheet6->setCellValue('C18', $containement->method_validation);
+        $sheet6->setCellValue('B36', $containement->risk_assesment);
 
-
-
-
-
+        $row = 25;
+        foreach($sortings as $sorting){
+            $sheet6->setCellValue('B'.$row, $sorting->location_company);
+            $sheet6->setCellValue('F'.$row, $sorting->qty_to_sort);
+            $sheet6->setCellValue('H'.$row, $sorting->qty_sorted);
+            $sheet6->setCellValue('J'.$row, $sorting->qty_NOK);
+            $sheet6->setCellValue('L'.$row, $sorting->scrap);
+            $row++;
+        }
 
 
         // Save the modified Excel file
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save($filePath);
+        $writer->save($copyPath);
 
         // Create a file response
         $headers = [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ];
 
-        return response()->download($filePath, 'data.xlsx', $headers);
+        $response = response()->download($copyPath, 'data.xlsx', $headers);
+        // Delete the copied file
+        return $response;
 
-        $cellsToClear = ['B6',
-        'G6','L6','B9','L9','B12','D16','N16', 'I13']; // Add more cell coordinates if needed
-        foreach ($cellsToClear as $cell) {
-            $sheet1->setCellValue($cell, '');
-        }
-        $cellCoordinate = 'I13'; // Cell coordinate with the image
 
-        // Remove the drawing object from the cell
-        $drawingObjects = $sheet->getDrawingCollection();
-        foreach ($drawingObjects as $drawing) {
-            if ($drawing->getCoordinates() === $cellCoordinate) {
-                $sheet->getDrawingCollection()->remove($drawing);
-            }
-        }
-        $sheet1->clearAllData();
+
+
+        
     }
 
     
