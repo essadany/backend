@@ -405,5 +405,30 @@ class ClaimController extends Controller
     return $records;
 
 }
+//Get Number of claims by status for month
+public function ClaimsStatus(){
+    $records = DB::table('claims')
+    ->leftJoin('problem_descriptions','claims.id','=','problem_descriptions.claim_id')
+    ->select('problem_descriptions.bontaz_fault as claim_confirmed', DB::raw('COUNT(*) as number_of_claims'),
+    DB::raw('YEAR(claims.opening_date) as year'), DB::raw('MONTH(claims.opening_date) as month'))
+    ->groupBy('year','month','problem_descriptions.bontaz_fault')
+    ->get();
+    return $records;
+
+}
+//Get Number of claims by status for month
+public function ConfirmedClaimsStatus(){
+    $records = DB::table('claims')
+    ->leftJoin('problem_descriptions','claims.id','=','problem_descriptions.claim_id')
+    ->where('bontaz_fault','YES')
+    ->leftJoin('reports','claims.id','=','reports.claim_id')
+    ->select('reports.status as 8d_status', DB::raw('COUNT(*) as number_of_8d'),
+    DB::raw('YEAR(claims.opening_date) as year'), DB::raw('MONTH(claims.opening_date) as month'))
+    ->groupBy('year','month','reports.status')
+    ->get();
+    return $records;
+
+}
+
     
 }

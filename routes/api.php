@@ -79,10 +79,11 @@ use App\Http\Controllers\TestController;
 use App\Http\Resources\TestRessource;
 use App\Models\Test;
 use App\Http\Controllers\NotificationController;
-
 use App\Http\Resources\NotificationRessource;
 use App\Models\Notification;
-
+use App\Http\Controllers\PPMController;
+use App\Http\Resources\PPMRessource;
+use App\Models\PPM;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -172,6 +173,8 @@ Route::put('/claim_tracking/{id}',[ClaimController::class, 'updateClaimTracking'
 
 
 Route::delete('/claim/{id}',[ClaimController::class, 'destroy']);
+Route::get('/claims_status_by_month',[ClaimController::class, 'ClaimsStatus']);
+Route::get('claims_confirmed/8d_status_by_month',[ClaimController::class, 'ConfirmedClaimsStatus']);
 
 
 //  --------------------------------------------Users--------------------------------------------------------------------
@@ -505,8 +508,6 @@ Route::delete('/effectiveness/{id}',[EffectivenessController::class, 'destroy'])
 
 //--------------------------------------------------------------Login-----------------------------------------------------------------------
 
-
-
 Route::post('/login', [AuthController::class,'login']);
 
 
@@ -538,8 +539,15 @@ Route::get('user/{user_id}/notifications_number',[NotificationController::class,
 Route::post('/notification',[NotificationController::class, 'store']);
 Route::put('/action/{action_id}/notification',[NotificationController::class, 'update']);
 Route::delete('/action/{action_id}/notification',[NotificationController::class, 'destroy']);
-//--------------------------------------------Execution--------------------------------------------------------------------
-
-Route::get('/execute-once-a-day', 'App\Http\Controllers\ExecutionController@executeOnceADay');
 
 
+//--------------------------------------------PPM--------------------------------------------------------------------
+Route::get('/ppms',function(){
+    return PPMRessource::collection(PPM::all());
+});
+Route::get('ppm/{year}',function($year){
+        return PPM::where('year',$year)->get();
+});
+Route::post('/ppm',[PPMController::class, 'store']);
+Route::put('/ppm/{id}',[PPMController::class, 'update']);
+Route::delete('/ppm/{id}',[PPMController::class, 'destroy']);
