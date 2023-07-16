@@ -507,14 +507,7 @@ class ExcelController extends Controller
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ];
 
-        $response = response()->download($copyPath, 'data.xlsx', $headers);
-        // Delete the copied file
-        return $response;
-
-
-
-
-        
+        return response()->download($copyPath, 'data.xlsx', $headers);
     }
 
     
