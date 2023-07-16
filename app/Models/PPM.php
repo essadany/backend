@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PPM extends Model
 {
     use HasFactory;
-    protected $fillable = ['year','month','week','shipped_parts','ppm','objectif'];
+    protected $fillable = ['year','month','week','shipped_parts','objectif'];
     protected $table = 'ppm';
     protected $attributes=[
         'objectif'=>3

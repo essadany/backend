@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('ppm', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('year')->nullable();
-            $table->string('month')->nullable();
-            $table->string('week')->nullable();
+            $table->integer('month')->nullable();
+            $table->integer('week')->nullable();
             $table->integer('shipped_parts')->nullable();
-            $table->float('ppm')->nullable();
             $table->float('objectif')->default(3);
             $table->timestamps();
         });

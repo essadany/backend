@@ -175,6 +175,8 @@ Route::put('/claim_tracking/{id}',[ClaimController::class, 'updateClaimTracking'
 Route::delete('/claim/{id}',[ClaimController::class, 'destroy']);
 Route::get('/claims_status_by_month',[ClaimController::class, 'ClaimsStatus']);
 Route::get('claims_confirmed/8d_status_by_month',[ClaimController::class, 'ConfirmedClaimsStatus']);
+Route::get('year/{year}/week_ppm',[ClaimController::class, 'getWeekPPM']);
+Route::get('year/{year}/month_ppm',[ClaimController::class, 'getMonthPPM']);
 
 
 //  --------------------------------------------Users--------------------------------------------------------------------

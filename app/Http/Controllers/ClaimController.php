@@ -429,6 +429,81 @@ public function ConfirmedClaimsStatus(){
     return $records;
 
 }
+public function getWeekPPM(Request $request, $year)
+{
+    $records = DB::table('claims')
+        ->join('ppm', function ($join) {
+            $join->on(DB::raw('YEAR(claims.opening_date)'), '=', 'ppm.year')
+                ->on(DB::raw('MONTH(claims.opening_date)'), '=', 'ppm.month')
+                ->on(DB::raw('WEEK(claims.opening_date)'), '=', 'ppm.week');
+        })
+        ->select(
+            DB::raw('YEAR(claims.opening_date) as year'),
+            DB::raw('MONTH(claims.opening_date) as month'),
+            DB::raw('WEEK(claims.opening_date) as week'),
+            DB::raw('SUM(claims.nbr_claimed_parts) as claimed_parts'),
+            'ppm.shipped_parts',
+            DB::raw('(SUM(claims.nbr_claimed_parts) * 1000000 / ppm.shipped_parts) as week_ppm'),
+            'ppm.objectif'
+        )
+        ->whereYear('claims.opening_date', $year)
+        ->groupBy(
+            DB::raw('YEAR(claims.opening_date)'),
+            DB::raw('MONTH(claims.opening_date)'),
+            DB::raw('WEEK(claims.opening_date)'),
+            'ppm.shipped_parts',
+            'ppm.objectif'
+        )
+        ->orderBy('year', 'desc')
+        ->orderBy('month', 'desc')
+        ->orderBy('week', 'desc')
+        ->get();
+
+    return $records;
+}
+
+public function getMonthPPM(Request $request, $year)
+{
+    $records = DB::table('claims')
+        ->join('ppm', function ($join) {
+            $join->on(DB::raw('YEAR(claims.opening_date)'), '=', 'ppm.year')
+                ->on(DB::raw('MONTH(claims.opening_date)'), '=', 'ppm.month')
+                ->on(DB::raw('WEEK(claims.opening_date)'), '=', 'ppm.week');
+        })
+        ->select(
+            DB::raw('YEAR(claims.opening_date) as year'),
+            DB::raw('MONTH(claims.opening_date) as month'),
+            DB::raw('SUM(claims.nbr_claimed_parts) as claimed_parts'),
+            DB::raw('SUM(ppm.shipped_parts) as shipped_parts'),
+            DB::raw('(SUM(claims.nbr_claimed_parts) * 1000000 / SUM(ppm.shipped_parts)) as month_ppm'),
+            'ppm.objectif'
+        )
+        ->whereYear('claims.opening_date', $year)
+        ->groupBy(
+            DB::raw('YEAR(claims.opening_date)'),
+            DB::raw('MONTH(claims.opening_date)'),
+            'ppm.objectif'
+        )
+        ->orderBy('year', 'desc')
+        ->orderBy('month', 'desc')
+        ->get();
+
+    return $records;
+}
+    /*$records = DB::table('claims')
+        ->select(DB::raw('YEAR(claims.opening_date) as year'),
+                 DB::raw('MONTH(claims.opening_date) as month'),
+                 DB::raw('WEEK(claims.opening_date) as week'),
+                 DB::raw('SUM(nbr_claimed_parts) as claimed_parts'))
+        ->whereYear('claims.opening_date', $year)
+        ->groupBy('year', 'month', 'week')
+        ->orderBy('year', 'desc')
+        ->orderBy('month', 'desc')
+        ->orderBy('week', 'desc')
+        ->get();
+
+    return $records;*/
+
 
     
 }

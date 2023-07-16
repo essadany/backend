@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
+use App\Models\PPM;
 class PPMController extends Controller
 {
     /**
@@ -28,24 +29,44 @@ class PPMController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input,[
-            'year'=>'',
-            'month'=>'',
-            'week'=>'',
-            'shipped_parts'=>'required',
-            'ppm'=>'',
-            'objectif'=>'',
+        $validator = Validator::make($input, [
+            'year' => '',
+            'month' => '',
+            'week' => '',
+            'shipped_parts' => 'required',
+            'objectif' => '',
         ]);
-        if($validator->fails()){
-        return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
+        
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error, make sure that all required inputs are not empty', $validator->errors());
         }
-    $ppm = PPM::create($input);
-    return response()->json([ 
-        'success'=>true,
-        'message'=> 'PPM Record Created Successfully',
-        'PPM'=>$ppm
-    ]);
+    
+        $existingRecord = PPM::where('year', $input['year'])
+                            ->where('month', $input['month'])
+                            ->where('week', $input['week'])
+                            ->first();
+    
+        if ($existingRecord) {
+            $existingRecord->shipped_parts = $input['shipped_parts'];
+            $existingRecord->objectif = $input['objectif'];
+            $existingRecord->save();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'PPM Record Updated Successfully',
+                'PPM' => $existingRecord
+            ]);
+        }
+    
+        $ppm = PPM::create($input);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'PPM Record Created Successfully',
+            'PPM' => $ppm
+        ]);
     }
+    
 
     /**
      * Display the specified resource.
@@ -75,9 +96,9 @@ class PPMController extends Controller
             $PPM->week = $request->week;
             $PPM->shipped_parts = $request->shipped_parts;
             $PPM->objectif = $request->objectif;
-            $notification->save();
+            $PPM->save();
             return response()->json([
-                'message'=>'Notification Record Updated Successfully'
+                'message'=>'PPM Record Updated Successfully'
             ],);
         }
     }
