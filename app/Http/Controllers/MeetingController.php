@@ -8,7 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use App\Mail\MeetingEmail;
+use Illuminate\Support\Facades\Mail;
 class MeetingController extends Controller
 {
     /**
@@ -45,7 +46,21 @@ class MeetingController extends Controller
             return $this->sendError('Validation Error, make sure that all input required are not empty', $validator->errors());
         }
         $meeting = Meeting::create($input);
+        $users = $meeting->team->users()->get();
+         //Send Email ------------------
+         foreach($users as $user){
+            $email = $user->email;
+            $mailSubject = "A New Meeting is scheduled on the ". $meeting->date;
+            $mailData = [
+            'title' => 'Meeting type :  '.$meeting->type,
+            'body' => 'A New Meeting is scheduled on the  ' .  $meeting->date.
+            'The meeting is about Claim with intern Reference : ' . $claim->internal_ID.
+            'comment : '.$meeting->comment ,
 
+            ];
+            Mail::to($email)->send(new MeetingEmail($mailData,$mailSubject));
+         }
+        
          
         return response()->json([
             'success' => true,
