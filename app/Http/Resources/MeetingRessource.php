@@ -19,6 +19,7 @@ class MeetingRessource extends JsonResource
             'team_id'=>$this->team_id,
             'type'=>$this->type,
             'date'=>$this->date,
+            'hour'=>$this->hour,
             'comment'=>$this->comment,
             'deleted'=>$this->deleted
         ];

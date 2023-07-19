@@ -40,6 +40,7 @@ class MeetingController extends Controller
         $validator = Validator::make($input, [
             'type' => 'required',
             'date' => 'required',
+            'hour' => 'required',
             'comment' => '',
         ]);
         if ($validator->fails()) {
@@ -53,9 +54,9 @@ class MeetingController extends Controller
             $mailSubject = "A New Meeting is scheduled on the ". $meeting->date;
             $mailData = [
             'title' => 'Meeting type :  '.$meeting->type,
-            'body' => 'A New Meeting is scheduled on the  ' .  $meeting->date.
-            'The meeting is about Claim with intern Reference : ' . $claim->internal_ID.
-            'comment : '.$meeting->comment ,
+            'body' => 'A New Meeting is scheduled on the  ' .  $meeting->date. ' at : ' . $meeting->hour .
+            ' The meeting is about Claim with intern Reference : ' . $claim->internal_ID . 
+            ' Comment : '.$meeting->comment ,
 
             ];
             Mail::to($email)->send(new MeetingEmail($mailData,$mailSubject));
@@ -93,6 +94,7 @@ class MeetingController extends Controller
             $meeting = Meeting::find($id);
             $meeting->type = $request->type;
             $meeting->date = $request->date;
+            $meeting->hour = $request->hour;
             $meeting->comment = $request->comment;
             $meeting->save();
             return response()->json([

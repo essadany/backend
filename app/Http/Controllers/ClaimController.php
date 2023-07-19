@@ -68,7 +68,7 @@ class ClaimController extends Controller
     //Create associated team
     $team = new Team();
     $Claim->team()->save($team);
-    //--------------------
+    //--------------------------------------
     //Create associated report
     $report = new Report();
     $openingDate = Carbon::parse($Claim->opening_date);
@@ -88,6 +88,9 @@ class ClaimController extends Controller
     //--------------------
     //Create associated problem description
     $prob = new ProblemDescription();
+    $openingDate = Carbon::parse($Claim->opening_date);
+    $date = $openingDate->addDay();
+    $prob->due_date = $date;
     $Claim->prob_desc()->save($prob);
     //--------------------
     //Create associated ishikawa
@@ -155,6 +158,13 @@ class ClaimController extends Controller
             $Claim->nbr_claimed_parts = $request->nbr_claimed_parts;
             $Claim->returned_parts = $request->returned_parts;
             $Claim->save();
+            $prob = $Claim->prob_desc;
+            if ($Claim->opening_date !== null){
+                $date = Carbon::parse($Claim->opening_date);
+                $due_date = $date->addDay();
+                $prob->due_date = $due_date;
+            }
+            $prob->save();
             return response()->json([
                 'message'=>'Claim Record Updated Successfully'
             ],);

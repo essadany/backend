@@ -14,7 +14,7 @@ class LabelChecking extends Model
                             'bontaz_plant'];
     protected $table = 'label_checkings';
     protected $enum = [
-        'bontaz_plant'=>['El Jadia','Shanghai','Marnaz','Fouchana', 'Velka Dobra','Viana Do Casteo','Troy','Pingamonhangaba-sp']
+        'bontaz_plant'=>['Morocco','France','Italy','Germany', 'Poland','China','Mexico','Tunisia']
     ];
 
     public function claim()

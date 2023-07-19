@@ -22,6 +22,7 @@ class ProblemDescription extends Model
                             'received',
                             'date_reception',
                             'date_done',
+                            'due_date',
                             'bontaz_fault',
                             'description'      
 ];

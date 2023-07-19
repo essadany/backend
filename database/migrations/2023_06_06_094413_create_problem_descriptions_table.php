@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('received')->default(false);
             $table->date('date_reception')->nullable();
             $table->date('date_done')->nullable();
+            $table->date('due_date')->nullable();
             $table->boolean('bontaz_fault',['YES','NO','NOT CONFIRMED'])->default('NOT CONFIRMED');
             $table->string('description')->nullable();
             $table->timestamps();

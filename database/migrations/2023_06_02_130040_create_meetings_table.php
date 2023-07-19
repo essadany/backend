@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->integer('team_id')->unsigned();
             $table->date('date')->nullable();
+            $table->time('hour')->nullable();
             $table->string('comment')->nullable();
             $table->boolean("deleted")->default(false);
             $table->timestamps();

@@ -28,6 +28,7 @@ class ProblemDescriptionRessource extends JsonResource
              'received'=>$this->received,
              'date_reception'=>$this->date_reception,
              'date_done'=>$this->date_done,
+             'due_date'=>$this->due_date,
              'bontaz_fault'=>$this->bontaz_fault,
              'description'=>$this->description
         ];

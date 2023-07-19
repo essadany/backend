@@ -11,7 +11,7 @@ class Product extends Model
     protected $fillable = ['product_ref','customer_id','customer_ref','name','zone','uap'];
     protected $table = 'products';
     protected $enum = [
-        'zone' => ['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']
+        'zone' =>['Salle Grise 1', 'Salle Grise 2','Salle Grise 3','Gicleur & Clapet','Fx Bobine Injection','Vanne motorisée']
     ];
     protected $attritbutes = [
         'deleted' => false

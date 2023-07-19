@@ -11,6 +11,7 @@ class Meeting extends Model
     protected $fillable = [ 'team_id',
                             'type',
                             'date',
+                             'hour',
                             'comment'];
     protected $table = 'meetings';
     protected $attributes = [

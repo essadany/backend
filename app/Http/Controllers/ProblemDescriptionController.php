@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\ProblemDescription;
+use App\Models\Report;
+use App\Models\Claim;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+
 class ProblemDescriptionController extends Controller
 {
     /**
@@ -48,6 +52,14 @@ class ProblemDescriptionController extends Controller
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
     $ProblemDescription = ProblemDescription::create($input);
+    if ($ProblemDescription->date_reception !==null){
+        $claim = $ProblemDescription->claim;
+        $report = $claim->report;
+        $dateReception = Carbon::parse($ProblemDescription->date_reception);
+        $due_date = $dateReception->addDays(10);
+        $report->due_date = $due_date;
+        $report->save();
+    }
     return response()->json([ 
         'success'=>true,
         'message'=> 'ProblemDescription Record Created Successfully',
@@ -92,6 +104,14 @@ class ProblemDescriptionController extends Controller
             $ProblemDescription->bontaz_fault = $request->bontaz_fault;
             $ProblemDescription->description = $request->description;     
             $ProblemDescription->save();
+            if ($ProblemDescription->date_reception !==null){
+                $claim = $ProblemDescription->claim;
+                $report = $claim->report;
+                $dateReception = Carbon::parse($ProblemDescription->date_reception);
+                $due_date = $dateReception->addDays(10);
+                $report->due_date = $due_date;
+                $report->save();
+            }
             return response()->json([
                 'message'=>'ProblemDescription Record Updated Successfully'
             ],);

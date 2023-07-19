@@ -34,11 +34,15 @@ class SortingController extends Controller
             'qty_to_sort'=>'required',
             'qty_sorted'=>'required',
             'qty_NOK'=>'required',
-            'scrap'=>'required'
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
         }
+         // Calculate the scrap value (qty_NOK / qty_sorted)
+    $scrap = $input['qty_sorted'] !== 0 ? (100*$input['qty_NOK'] / $input['qty_sorted']).'%' : '0%';
+    
+    // Add the calculated scrap value to the input array
+    $input['scrap'] = $scrap;
     $Sorting = Sorting::create($input);
     return response()->json([ 
         'success'=>true,
@@ -74,7 +78,7 @@ class SortingController extends Controller
             $Sorting->qty_to_sort = $request->qty_to_sort;
             $Sorting->qty_sorted = $request->qty_sorted;
             $Sorting->qty_NOK = $request->qty_NOK;
-            $Sorting->scrap = $request->scrap;
+            $Sorting->scrap = $Sorting->qty_sorted !== 0 ? (($Sorting->qty_NOK / $Sorting->qty_sorted) * 100).'%' : '0%';
             $Sorting->save();
             return response()->json([
                 'message'=>'Sorting Record Updated Successfully'

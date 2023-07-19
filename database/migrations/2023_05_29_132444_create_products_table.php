@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("customer_ref");
             $table->integer("customer_id")->unsigned();
             $table->string("name");
-            $table->enum("zone",['Module', 'Bobine','Faiscaux','Clapet','Gicleur','Vanne']);
+            $table->enum("zone",['Salle Grise 1', 'Salle Grise 2','Salle Grise 3','Gicleur & Clapet','Fx Bobine Injection','Vanne motorisée']);
             $table->string("uap")->nullable();
             $table->boolean("deleted")->default(false);
             $table->timestamps();
