@@ -20,7 +20,7 @@ class User extends Authenticatable
      */
     protected $fillable = [ 'name', 'email', 'password', 'phone', 'fonction', 'role'];
     protected $enum = [
-        'role'=>['admin','user','leader']
+        'role'=>['admin','user','leader','uap engineer']
     ];
     protected $attributes = [
         'role' => 'user',

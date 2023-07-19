@@ -64,13 +64,14 @@ class ActionController extends Controller
      //Send Email ------------------
     $claim = $action->report->claim;
     $email = $action->user->email;
+    $mailSubject = "New Action To Do before : ". $action->planned_date;
     $mailData = [
-        'title' => 'New Action To Do before: ' . $action->planned_date.'-- Action :  '.$action->action,
+        'title' => 'New Action To Do before: ' . $action->planned_date. ' --- Action :  '.$action->action,
         'body' => 'You have a new Action to finish before ' . $action->planned_date . '. 
             It is about the Claim with intern Reference : ' . $claim->internal_ID,
     ];
 
-    Mail::to($email)->send(new SendMail($mailData));
+    Mail::to($email)->send(new SendMail($mailData,$mailSubject));
     /////////////////////////////////////////////////////////////////
    
     return response()->json([ 
