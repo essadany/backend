@@ -109,7 +109,7 @@ class ActionController extends Controller
             $Action->action = $request->action;
             $Action->type = $request->type;
             $Action->planned_date = $request->planned_date;
-
+            $Action->justify= $request->justify;
             $Action->save();
             return response()->json([
                 'message'=>'Action Record Updated Successfully'

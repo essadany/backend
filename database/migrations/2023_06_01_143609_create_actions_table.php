@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('action');
             $table->enum('type',['containment','potential','implemented','preventive'])->default('containment');
             $table->date('planned_date');
+            $table->string('justify')->nullable();
             $table->date('start_date')->nullable();
             $table->enum('status',['not started','on going', 'done','delayed'])->default('not started');
             $table->date('done_date')->nullable();
