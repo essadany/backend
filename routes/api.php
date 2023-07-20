@@ -57,9 +57,6 @@ use App\Http\Controllers\AuthController;
 use App\Models\Report;
 use App\Http\Resources\ReportRessource;
 use App\Http\Controllers\ReportController;
-use App\Models\Annexe;
-use App\Http\Resources\AnnexeRessource;
-use App\Http\Controllers\AnnexeController;
 use App\Models\Containement;
 use App\Http\Resources\ContainementRessource;
 use App\Http\Controllers\ContainementController;
@@ -157,7 +154,6 @@ Route::get('/claim/{id}/problem_description',[ClaimController::class, 'getProbDe
 Route::get('/claim/{id}/label_checking_join',[ClaimController::class, 'getLabelCheckJoin']);
 Route::get('/claim/{id}/report_join',[ClaimController::class, 'getReportJoin']);
 Route::get('claim/{claim_id}/effectiveness',[ClaimController::class, 'getEffectivenessByClaim']);
-Route::get('claim/{claim_id}/annexe',[ClaimController::class, 'getAnnexeByClaim']);
 
 Route::get('/claims_activated',[ClaimController::class, 'getActivatedClaims']);
 Route::get('/claim/{id}/team_users',[ClaimController::class, 'getUsersOfTeam']);
@@ -450,20 +446,6 @@ Route::post('/report',[ReportController::class, 'store']);
 Route::put('/report/{id}',[ReportController::class, 'update']);
 
 Route::delete('/report/{id}',[ReportController::class, 'destroy']);
-
-
-//--------------------------------------------Annexe--------------------------------------------------------------------
-Route::get('/annexes',function(){
-    return AnnexeRessource::collection(Annexe::all());
-});
-
-Route::get('annexe/{id}',function($id){
-    return new AnnexeRessource(Annexe::findOrFail($id));
-});
-Route::post('/annexe',[AnnexeController::class, 'store']);
-Route::put('/annexe/{id}',[AnnexeController::class, 'update']);
-
-Route::delete('/annexe/{id}',[AnnexeController::class, 'destroy']);
 
 //--------------------------------------------Containement--------------------------------------------------------------------
 Route::get('/containements',function(){

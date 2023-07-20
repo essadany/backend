@@ -50,14 +50,11 @@ class Report extends Model
         return $this->hasMany(Action::class);
     }
     /**
-     * Get the annexe associated with the Report
+     * Get the effectiveness associated with the Report
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function annexe()
-    {
-        return $this->hasOne(Annexe::class);
-    }
+   
     public function effectiveness()
     {
         return $this->hasOne(Effectiveness::class);

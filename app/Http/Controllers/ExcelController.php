@@ -347,39 +347,37 @@ class ExcelController extends Controller
         $five_whys_occurence = $five_why->five_lignes()->where('type','occurence')->get();
         $five_whys_detection = $five_why->five_lignes()->where('type','detection')->get();
         $five_whys_system = $five_why->five_lignes()->where('type','system')->get();
-        $row = 9;
-        foreach($five_whys_occurence as $item){
-            $row1 = $row+1;
-            $sheet8->mergeCells('D'.$row.':M'.$row);
-            $sheet8->mergeCells('E'.$row1.':M'.$row1);
-            $sheet8->setCellValue('D'.$row, $item->why);
-            $sheet8->setCellValue('E'.$row1, $item->answer);
-            $row=$row+2;
+        
+        $row1 = 9;
+        foreach($five_whys_occurence as $item1){
+            $sheet8->mergeCells('D'.$row1.':M'.$row1);
+            $sheet8->mergeCells('E'.($row1+1).':M'.($row1+1));
+            $sheet8->setCellValue('D'.$row1, $item1->why??'');
+            $sheet8->setCellValue('E'.($row1+1), $item1->answer??'');
+            $row1=$row1+2;
         }
-        $row = 25;
-        foreach($five_whys_detection as $item){
-            $row1 = $row+1;
-            $sheet8->mergeCells('D'.$row.':M'.$row);
-            $sheet8->mergeCells('E'.$row1.':M'.$row1);
-            $sheet8->setCellValue('D'.$row, $item->why);
-            $sheet8->setCellValue('E'.$row1, $item->answer);
-            $row=$row+2;
+        $row3 = 25;
+        foreach($five_whys_detection as $item2){
+            $sheet8->mergeCells('D'.$row3.':M'.$row3);
+            $sheet8->mergeCells('E'.($row3+1).':M'.($row3+1));
+            $sheet8->setCellValue('D'.$row3, $item2->why??'');
+            $sheet8->setCellValue('E'.($row3+1), $item2->answer??'');
+            $row3=$row3+2;
                  }
-        $row = 41;
-        foreach($five_whys_system as $item){
-            $row1 = $row+1;
-            $sheet8->mergeCells('D'.$row.':M'.$row);
-            $sheet8->mergeCells('E'.$row1.':M'.$row1);
-            $sheet8->setCellValue('D'.$row, $item->why);
-            $sheet8->setCellValue('E'.$row1, $item->answer);
-            $row=$row+2;
+        $row5 = 41;
+        foreach($five_whys_system as $item3){
+            $sheet8->mergeCells('D'.$row5.':M'.$row5);
+            $sheet8->mergeCells('E'.($row5+1).':M'.($row5+1));
+            $sheet8->setCellValue('D'.$row5, $item3->why??'');
+            $sheet8->setCellValue('E'.($row5+1), $item3->answer??'');
+            $row5=$row5+2;
         }
         $sheet8->mergeCells('E21:M22');
         $sheet8->mergeCells('E37:M38');
         $sheet8->mergeCells('E53:M54');
-        $sheet8->setCellValue('F21', $results_occurence->input);
-        $sheet8->setCellValue('F37', $results_detection->input);
-        $sheet8->setCellValue('F53', $results_system->input);
+        $sheet8->setCellValue('E21', $results_occurence->input??'');
+        $sheet8->setCellValue('E37', $results_detection->input??'');
+        $sheet8->setCellValue('E53', $results_system->input??'');
         // Ishikawa-------------------------------------------------------
         $ishikawa = $claim->ishikawa;
         $categories = $ishikawa->categories()->get();

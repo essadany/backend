@@ -91,8 +91,6 @@ class DailyCommand extends Command
 
         }
     
-        
-    
         $this->info('Actions status Verified successfully.');
     }
 }

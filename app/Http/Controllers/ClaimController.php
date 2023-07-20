@@ -6,14 +6,10 @@ use App\Models\Team;
 use App\Models\User;
 use App\Models\Containement;
 use App\Models\Effectiveness;
-
 use App\Models\Result;
 use Carbon\Carbon;
-
 use App\Models\ProblemDescription;
 use App\Models\Report;
-use App\Models\Annexe;
-
 use App\Models\Ishikawa;
 use App\Models\FiveWhy;
 use App\Models\LabelChecking;
@@ -75,9 +71,6 @@ class ClaimController extends Controller
     $due_date = $openingDate->addDays(10);
     $report->due_date = $due_date;
     $Claim->report()->save($report);
-    //Create associated annexe
-    $annexe = new Annexe();
-    $report->annexe()->save($annexe);
     //Create associated Effectiveness
     $eff = new Effectiveness();
     $report->effectiveness()->save($eff);
@@ -335,11 +328,7 @@ class ClaimController extends Controller
         $eff = $Claim->report->effectiveness ;
         return response()->json($eff);
     }
-    public function getAnnexeByClaim($id){
-        $Claim = Claim::find($id);
-        $annexe = $Claim->report->annexe ;
-        return response()->json($annexe);
-    }
+
     public function getProbDescByClaim($id){
         $Claim = Claim::find($id);
         $prob_desc = $Claim->prob_desc ;
