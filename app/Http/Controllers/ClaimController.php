@@ -45,16 +45,16 @@ class ClaimController extends Controller
             'internal_ID'=>'required',
             'refRecClient'=> 'required',
             'category' => 'required',
+            'customer_part_number'=>'',
             'product_ref' => 'required',
             'engraving' => 'required',
             'prod_date' => 'required',
             'object' => 'required',
             'opening_date'=> 'required',
-            'final_cusomer' => '',
+            'customer' => '',
             'claim_details'=>'',
             'def_mode'=> '',
             'nbr_claimed_parts' => 'required',
-            'returned_parts' => '',
             'deleted'=>''
         ]);
         if($validator->fails()){
@@ -145,11 +145,11 @@ class ClaimController extends Controller
             $Claim->prod_date = $request->prod_date;
             $Claim->object = $request->object;
             $Claim->opening_date = $request->opening_date;
-            $Claim->final_cusomer = $request->final_cusomer;
+            $Claim->customer = $request->customer;
+            $Claim->customer_part_number = $request->customer_part_number;
             $Claim->claim_details = $request->claim_details;
             $Claim->def_mode = $request->def_mode;
             $Claim->nbr_claimed_parts = $request->nbr_claimed_parts;
-            $Claim->returned_parts = $request->returned_parts;
             $Claim->save();
             $prob = $Claim->prob_desc;
             if ($Claim->opening_date !== null){
@@ -260,9 +260,9 @@ class ClaimController extends Controller
     public function getClaimsJoin(){
         $claims = DB::table('claims')
             ->join('products', 'claims.product_ref', '=', 'products.product_ref')
-            ->join('customers','customers.id', '=', 'products.customer_id' )
+            ->join('customers','customers.code', '=', 'products.customer_code' )
             ->where('claims.deleted',false)
-            ->select( 'customers.id as customer_id','customers.name as customer_name','claims.*','products.name as product_name')
+            ->select( 'customers.code as customer_code','customers.name as customer_name','claims.*','products.name as product_name')
             ->get();
         return $claims;
     }
@@ -270,7 +270,6 @@ class ClaimController extends Controller
     public function getClaims_tracking(){
         $claims = DB::table('claims')
         ->join('products', 'claims.product_ref', '=', 'products.product_ref')
-        ->join('customers', 'customers.id', '=', 'products.customer_id')
         ->leftJoin('reports', 'claims.id', '=', 'reports.claim_id')
         ->leftJoin('problem_descriptions', 'claims.id', '=', 'problem_descriptions.claim_id')
         ->leftJoin('ishikawas', 'claims.id', '=', 'ishikawas.claim_id')
@@ -279,7 +278,7 @@ class ClaimController extends Controller
        // ->leftJoin('sortings', 'containements.id', '=', 'sortings.containement_id')
 
             ->where('claims.deleted',false)
-            ->select( 'customers.id as customer_id','customers.name as customer_name','claims.*','products.name as product_name','products.customer_ref','products.uap',
+            ->select( 'products.customer_code','claims.*','products.name as product_name','claims.customer_part_number','products.zone',
                         'reports.id as report_id','reports.progress_rate','reports.status as report_status',
                         'reports.due_date as report_due_date','reports.sub_date as report_sub_date',
                         'reports.sub_date as report_sub_date','reports.due_date as report_due_date',
@@ -394,10 +393,10 @@ class ClaimController extends Controller
 {
     $records = DB::table('products')
         ->join('claims','claims.product_ref','=','products.product_ref')
-        ->select('products.product_ref as bontaz_part_number','products.customer_ref as customer_part_number',
-        'products.name as product_designation','products.zone as zone','products.uap as uap_engineer', DB::raw('COUNT(*) as number_of_claims'))
-        ->groupBy('products.product_ref','products.customer_ref',
-        'products.name','products.zone','products.uap')
+        ->select('products.product_ref as bontaz_part_number','claims.customer_part_number',
+        'products.name as product_designation','products.zone as zone', DB::raw('COUNT(*) as number_of_claims'))
+        ->groupBy('products.product_ref','claims.customer_part_number',
+        'products.name','products.zone')
         ->orderBy('number_of_claims', 'desc')
         ->limit(5)
         ->get();
@@ -431,7 +430,8 @@ public function ConfirmedClaimsStatus(){
 public function getWeekPPM(Request $request, $year)
 {
     $records = DB::table('claims')
-        ->join('ppm', function ($join) {
+        ->leftJoin('problem_descriptions','problem_descriptions.claim_id','=','claims.id')
+        ->rightJoin('ppm', function ($join) {
             $join->on(DB::raw('YEAR(claims.opening_date)'), '=', 'ppm.year')
                 ->on(DB::raw('MONTH(claims.opening_date)'), '=', 'ppm.month')
                 ->on(DB::raw('WEEK(claims.opening_date)'), '=', 'ppm.week');
@@ -446,6 +446,7 @@ public function getWeekPPM(Request $request, $year)
             'ppm.objectif'
         )
         ->whereYear('claims.opening_date', $year)
+        ->where('problem_descriptions.bontaz_fault','YES')
         ->groupBy(
             DB::raw('YEAR(claims.opening_date)'),
             DB::raw('MONTH(claims.opening_date)'),
@@ -464,6 +465,7 @@ public function getWeekPPM(Request $request, $year)
 public function getMonthPPM(Request $request, $year)
 {
     $records = DB::table('claims')
+    ->leftJoin('problem_descriptions','problem_descriptions.claim_id','=','claims.id')
     ->rightJoin(DB::raw('(SELECT year, month, SUM(shipped_parts) as total_shipped_parts, AVG(objectif) as objectif FROM ppm GROUP BY year, month) as ppm'), function ($join) {
         $join->on(DB::raw('YEAR(claims.opening_date)'), '=', 'ppm.year')
             ->on(DB::raw('MONTH(claims.opening_date)'), '=', 'ppm.month');
@@ -477,6 +479,7 @@ public function getMonthPPM(Request $request, $year)
         'ppm.objectif'
     )
     ->whereYear('claims.opening_date', $year)
+    ->where('problem_descriptions.bontaz_fault','YES')   
     ->groupBy(
         DB::raw('YEAR(claims.opening_date)'),
         DB::raw('MONTH(claims.opening_date)'),
@@ -490,19 +493,6 @@ public function getMonthPPM(Request $request, $year)
 return $records;
 
 }
-    /*$records = DB::table('claims')
-        ->select(DB::raw('YEAR(claims.opening_date) as year'),
-                 DB::raw('MONTH(claims.opening_date) as month'),
-                 DB::raw('WEEK(claims.opening_date) as week'),
-                 DB::raw('SUM(nbr_claimed_parts) as claimed_parts'))
-        ->whereYear('claims.opening_date', $year)
-        ->groupBy('year', 'month', 'week')
-        ->orderBy('year', 'desc')
-        ->orderBy('month', 'desc')
-        ->orderBy('week', 'desc')
-        ->get();
-
-    return $records;*/
 
 
     

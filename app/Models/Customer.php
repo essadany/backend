@@ -8,11 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     use HasFactory;
-    protected $fillable = ['customer_ref','name','category',"info"];
+    protected $fillable = ['code','name',"info"];
     protected $table = 'customers';
-    protected $enum = [
-        'category' => ['Intern', 'Extern']
-    ];
+
     protected $attributes = [
         'deleted'=>false
     ];
@@ -22,8 +20,8 @@ class Customer extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function products()
+    public function products() : HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class,'code','customer_code');
     }
 }

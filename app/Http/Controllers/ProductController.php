@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Product;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
@@ -33,11 +34,9 @@ class ProductController extends Controller
         $input = $request->all();
         $validator = Validator::make($input,[
             'product_ref'=>'required',
-            'customer_ref'=>'required',
-            'customer_id'=>'required',
+            'customer_code'=>'required',
             'name'=>'',
             'zone' => 'required',
-            'uap'=>''
         ]);
         if($validator->fails()){
         return $this->sendError('Validation Error, make shure that all input required are not empty', $validator->errors());
@@ -73,11 +72,9 @@ class ProductController extends Controller
         if(Product::where('id',$id)->exists()){
             $product = Product::find($id);
             $product->product_ref = $request->product_ref;
-            $product->customer_id = $request->customer_id;
-            $product->customer_ref = $request->customer_ref;
+            $product->customer_code = $request->customer_code;
             $product->name = $request->name;
             $product->zone = $request->zone;
-            $product->uap = $request->uap;
             $product->save();
             return response()->json([
                 'message'=>'Product Record Updated Successfully'
@@ -118,9 +115,9 @@ class ProductController extends Controller
     {
         
         $customer_id = DB::table('products')
-            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->join('customers', 'products.customer_code', '=', 'customers.code')
             ->where('customers.name', '=', $name)
-            ->select( 'customers.id')
+            ->select( 'customers.code')
             ->get();
         return $customer_id;
     }
@@ -149,9 +146,9 @@ class ProductController extends Controller
     //Products join Customers
     public function getProductsJoinCustomers(){
         $products = DB::table('products')
-            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->leftJoin('customers', 'products.customer_code', '=', 'customers.code')
             ->where('products.deleted',false)
-            ->select( 'products.id as product_id','products.product_ref','products.customer_ref','products.name as product_name','products.customer_id','customers.name as customer_name','products.zone','products.uap','products.deleted')
+            ->select( 'products.id as product_id','product_ref','products.name as product_name','products.customer_code','customers.name as customer_name','products.zone','products.deleted')
             ->get();
         return $products;
     }

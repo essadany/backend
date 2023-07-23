@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('customer_ref')->unique()->nullable();
+            $table->bigIncrements('id');
+            $table->unsignedInteger('code')->unique();
             $table->string('name')->nullable();
-            $table->enum('category',["Intern", "Extern"])->nullable();
             $table->string('info')->nullable();
             $table->boolean('deleted')->default(false);
             $table->timestamps();

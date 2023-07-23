@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['product_ref','customer_id','customer_ref','name','zone','uap'];
+    protected $fillable = ['product_ref','customer_code','name','zone'];
     protected $table = 'products';
     protected $enum = [
         'zone' =>['Salle Grise 1', 'Salle Grise 2','Salle Grise 3','Gicleur & Clapet','Fx Bobine Injection','Vanne motorisée']

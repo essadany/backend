@@ -137,9 +137,6 @@ class TeamUserController extends Controller
        if (!$team->users->contains($user)) {
         // Add the user to the team.
         $team->users()->attach($user);
-        $user->role= "leader";
-        $user->save();
-
         // Redirect the user back to the team page.
         return response()->json([
             'message'=>' User Added successfuly to the team',

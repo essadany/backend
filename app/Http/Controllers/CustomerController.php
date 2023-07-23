@@ -32,9 +32,8 @@ class customerController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'customer_ref'=>'required',
+            'code'=> 'required',
             'name'=> 'required',
-            'category' => 'required',
             'info' => ''
         ]);
         if($validator->fails()){
@@ -71,9 +70,8 @@ class customerController extends Controller
     {
         if(Customer::where('id',$id)->exists()){
             $customer = Customer::find($id);
-            $customer->customer_ref = $request->customer_ref;
             $customer->name = $request->name;
-            $customer->category = $request->category;
+            $customer->code = $request->code;
             $customer->info = $request->info;
             $customer->save();
             return response()->json([
@@ -126,7 +124,8 @@ class customerController extends Controller
         $customers = DB::table('customers')
             ->where('customers.deleted',false)
             ->select( 'customers.*')
-            ->get();
-        return $customers;
+            ->get()
+            ->unique('name');
+        return response()->json($customers->values()->toArray());
     }
 }

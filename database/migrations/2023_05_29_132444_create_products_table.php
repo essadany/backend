@@ -14,16 +14,14 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->increments("id");
             $table->string("product_ref")->unique();
-            $table->string("customer_ref");
-            $table->integer("customer_id")->unsigned();
-            $table->string("name");
+            $table->unsignedInteger("customer_code");
+            $table->string("name")->nullable();
             $table->enum("zone",['Salle Grise 1', 'Salle Grise 2','Salle Grise 3','Gicleur & Clapet','Fx Bobine Injection','Vanne motorisée']);
-            $table->string("uap")->nullable();
             $table->boolean("deleted")->default(false);
             $table->timestamps();
 
-            $table->foreign('customer_id')->references('id')->on('customers')
-            ->onUpdate('cascade');
+            $table->foreign('customer_code')->references('code')->on('customers')
+->onUpdate('cascade');
         });
         
     }

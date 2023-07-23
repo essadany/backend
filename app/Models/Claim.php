@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Relations\hasOne;
 class Claim extends Model
 {
     use HasFactory;
-    protected $fillable = ['internal_ID','refRecClient','category','product_ref', 'status','engraving', 'prod_date', 'object', 
-    'opening_date', 'final_cusomer', 'claim_details', 'def_mode',
-    'nbr_claimed_parts', 'returned_parts'];
+    protected $fillable = ['internal_ID','refRecClient','category','customer_part_number','product_ref', 'status','engraving', 'prod_date', 'object', 
+    'opening_date', 'customer', 'claim_details', 'def_mode',
+    'nbr_claimed_parts'];
     protected $enum = [
         'status' => ['on going', 'done','delayed'],
         'category'=> ['AQI', 'CC','Field']

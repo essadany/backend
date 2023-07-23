@@ -16,11 +16,9 @@ class ProductRessource extends JsonResource
     {
         return ['id'=>$this->id,
         'product_ref' => $this->product_ref,
-        'customer_id' => $this->customer_id,
-        'customer_ref' => $this->customer_ref,
+        'customer_code' => $this->customer_code,
         'name' => $this->name,
         'zone' => $this->zone,
-        'uap' => $this->uap,
         'deleted'=>$this->deleted];
     }
 }

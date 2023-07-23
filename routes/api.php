@@ -94,7 +94,7 @@ use App\Models\PPM;
 
 //  --------------------------------------------Customer--------------------------------------------------------------------
 Route::get('/customers',function(){
-    return CustomerRessource::collection(Customer::all());
+    return CustomerRessource::collection(Customer::all()->unique('name'));
 });
 
 Route::get('customer/{id}',function($id){
@@ -131,6 +131,7 @@ Route::put('/product/{id}',[ProductController::class, 'update']);
 Route::put('/product_disactivated/{id}',[ProductController::class, 'disactivate']);
 
 Route::delete('/product/{id}',[ProductController::class, 'destroy']);
+
 
 //  --------------------------------------------Claim--------------------------------------------------------------------
 Route::get('/claims',function(){
