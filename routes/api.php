@@ -416,7 +416,9 @@ Route::post('/image',[ImageController::class, 'store']);
 Route::put('/image/{id}',[ImageController::class, 'update']);
 
 Route::post('/add_image',[ImageController::class, 'addImage']);
-
+Route::post('/add_good_part',[ImageController::class, 'addGoodPartImage']);
+Route::post('/add_bad_part',[ImageController::class, 'addBadPartImage']);
+Route::post('/add_lablel_image',[ImageController::class, 'addLabelImage']);
 Route::delete('/image/{id}',[ImageController::class, 'destroy']);
 
 

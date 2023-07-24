@@ -13,7 +13,6 @@ class Image extends Model
                                 'isGood', 
                                 'description',
                                 'report_id',
-                                'annexe_id',
                                 'probelm_id',
                                 'label_checking_id'];
     protected $table = 'images';

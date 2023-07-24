@@ -42,7 +42,6 @@ class ImageController extends Controller
             'description'=>'',
             'report_id'=>'',
             'problem_id'=>'',
-            'annexe_id'=>'',
             'label_checking_id'=>''
         ]);
         if($validator->fails()){
@@ -94,10 +93,11 @@ class ImageController extends Controller
             'path' => $newPath,
         ]);*/
         // Update the image record in the database
+        $image->problem_id=$request->input('problem_id');
         $image->isGood = $request->input('isGood');
-        $image->description = $request->input('description');
         // Store the new image file
         $image->save();
+        return $image;
 
         return response()->json([
             'message' => 'Image Record Updated Successfully'
@@ -168,20 +168,106 @@ class ImageController extends Controller
     }
 
     public function addImage(Request $request){
-        $image = new Image();
-        $image->isGood=$request->input('isGood');
-        $image->report_id=$request->input('report_id');
-        $image->problem_id=$request->input('problem_id');
-        $image->description=$request->input('description');
-        $image->annexe_id=$request->input('annexe_id');
-        $image->description=$request->input('description');
-        $image->label_checking_id=$request->input('label_checking_id');
-        $image->path=$request->file('path')->store('images');
-        $image->save();
-        return $image;
-
-    
+            $image = new Image();
+            $image->isGood=$request->input('isGood');
+            $image->report_id=$request->input('report_id');
+            $image->problem_id=$request->input('problem_id');
+            $image->description=$request->input('description');
+            $image->description=$request->input('description');
+            $image->label_checking_id=$request->input('label_checking_id');
+            $image->path=$request->file('path')->store('images');
+            $image->save();
+            return $image;
     }
+    public function addGoodPartImage(Request $request){
+        $problem_id = $request->input('problem_id');
+        $isGood = $request->input('isGood');
+
+        // Find the existing image with the same problem_id and isGood values
+        $existingImage = Image::where('problem_id', $problem_id)
+                            ->where('isGood', 1)
+                            ->first();
+
+        if ($existingImage) {
+            // Delete the image file from storage
+            Storage::delete($existingImage->path);
+            // If an existing image is found, update the path of the image
+            $existingImage->path = $request->file('path')->store('images');
+            $existingImage->save();
+            return $existingImage;
+        } else{
+            // Create a new image
+            $image = new Image();
+            $image->isGood = $isGood;
+            $image->report_id = $request->input('report_id');
+            $image->problem_id = $problem_id;
+            $image->description = $request->input('description');
+            $image->path = $request->file('path')->store('images');
+            $image->save();
+            return $image;
+        }
+}
+    public function addBadPartImage(Request $request){
+        $problem_id = $request->input('problem_id');
+        $isGood = $request->input('isGood');
+
+        // Find the existing image with the same problem_id and isGood values
+        $existingImage = Image::where('problem_id', $problem_id)
+                            ->where('isGood', 1)
+                            ->first();
+
+        if ($existingImage) {
+            // Delete the image file from storage
+            Storage::delete($existingImage->path);
+            // If an existing image is found, update the path of the image
+            $existingImage->path = $request->file('path')->store('images');
+            $existingImage->save();
+            return $existingImage;
+        }
+        else{
+                // Create a new image
+            $image = new Image();
+            $image->isGood = $isGood;
+            $image->report_id = $request->input('report_id');
+            $image->problem_id = $problem_id;
+            $image->description = $request->input('description');
+            $image->label_checking_id = $label_checking_id;
+            $image->path = $request->file('path')->store('images');
+            $image->save();
+            return $image;
+        }
+        
+    }
+
+    public function addLabelImage(Request $request){
+        $label_checking_id = $request->input('label_checking_id');
+    
+        // Check if an image with the same label_checking_id, problem_id, and isGood value exists
+        $existingImage = Image::where('label_checking_id', $label_checking_id)
+                              ->first();
+    
+        if ($existingImage) {
+            // Delete the image file from storage
+            Storage::delete($existingImage->path);
+            // If an existing image is found, update the path of the image
+            $existingImage->path = $request->file('path')->store('images');
+            $existingImage->save();
+            return $existingImage;
+        } else {
+            $image = new Image();
+            $image->isGood=$request->input('isGood');
+            $image->report_id=$request->input('report_id');
+            $image->problem_id=$request->input('problem_id');
+            $image->description=$request->input('description');
+            $image->description=$request->input('description');
+            $image->label_checking_id=$request->input('label_checking_id');
+            $image->path=$request->file('path')->store('images');
+            $image->save();
+            return $image;
+        }
+        
+    }
+
 
 
 }

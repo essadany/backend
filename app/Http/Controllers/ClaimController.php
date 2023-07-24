@@ -359,7 +359,7 @@ class ClaimController extends Controller
         ->join('claims', 'claims.id', '=', 'label_checkings.claim_id')
         ->where('claims.id',$claim_id)
         ->join('products','products.product_ref','=','claims.product_ref')
-        ->select('label_checkings.id', 'products.product_ref','internal_ID','customer_ref','sorting_method','bontaz_plant')
+        ->select('label_checkings.id', 'products.product_ref','internal_ID','customer_part_number','sorting_method','bontaz_plant')
         ->get()->first();
         return $label_check;
     }
