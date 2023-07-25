@@ -273,7 +273,7 @@ class ExcelController extends Controller
         $label_check = $claim->label_checking;
         $label_image = $label_check->image;
         
-        $sheet5->setCellValue('D2', $product->customer_ref);
+        $sheet5->setCellValue('D2', $claim->customer_part_number);
         $sheet5->setCellValue('D3', $claim->refRecClient);
         $sheet5->setCellValue('D4', $claim->opening_date);
         $sheet5->setCellValue('D6', $claim->product_ref);
@@ -288,7 +288,7 @@ class ExcelController extends Controller
             $drawing5->setWorksheet($sheet5);
         }
         
-        $sheet5->setCellValue('D11', $product->customer_ref);
+        $sheet5->setCellValue('D11', $product->customer_part_number);
         $sheet5->setCellValue('D12', $claim->refRecClient);
         $sheet5->setCellValue('D13', $claim->opening_date);
         $sheet5->setCellValue('D15', $claim->product_ref);
@@ -302,7 +302,7 @@ class ExcelController extends Controller
             $drawing5->setCoordinates('G12');
             $drawing5->setWorksheet($sheet5);
         }
-        $sheet5->setCellValue('D20', $product->customer_ref);
+        $sheet5->setCellValue('D20', $product->customer_part_number);
         $sheet5->setCellValue('D21', $claim->refRecClient);
         $sheet5->setCellValue('D22', $claim->opening_date);
         $sheet5->setCellValue('D24', $claim->product_ref);
@@ -316,7 +316,7 @@ class ExcelController extends Controller
             $drawing5->setCoordinates('G21');
             $drawing5->setWorksheet($sheet5);
         }   
-        $sheet5->setCellValue('D29', $product->customer_ref);
+        $sheet5->setCellValue('D29', $product->customer_part_number);
         $sheet5->setCellValue('D30', $claim->refRecClient);
         $sheet5->setCellValue('D31', $claim->opening_date);
         $sheet5->setCellValue('D33', $claim->product_ref);

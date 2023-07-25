@@ -389,12 +389,13 @@ class ClaimController extends Controller
     }
     // Statistiques
     // Get the top five products that have the big number of claims
-    public function MostProductsClaimed()
+    public function MostProductsClaimed($year)
 {
     $records = DB::table('products')
         ->join('claims','claims.product_ref','=','products.product_ref')
         ->select('products.product_ref as bontaz_part_number','claims.customer_part_number',
         'products.name as product_designation','products.zone as zone', DB::raw('COUNT(*) as number_of_claims'))
+        ->whereYear('claims.opening_date', $year)
         ->groupBy('products.product_ref','claims.customer_part_number',
         'products.name','products.zone')
         ->orderBy('number_of_claims', 'desc')

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Mail\MeetingEmail;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mime\Email;
+
 class MeetingController extends Controller
 {
     /**

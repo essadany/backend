@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone')->unique()->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->enum('role',['admin','user','uap engineer'])->default('user');
             $table->boolean("deleted")->default(false);
             $table->rememberToken();

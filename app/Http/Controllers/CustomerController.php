@@ -124,8 +124,7 @@ class customerController extends Controller
         $customers = DB::table('customers')
             ->where('customers.deleted',false)
             ->select( 'customers.*')
-            ->get()
-            ->unique('name');
-        return response()->json($customers->values()->toArray());
+            ->get();
+        return response()->json($customers);
     }
 }
